@@ -1,4 +1,49 @@
-# Comércio exterior brasileiro
+# Comércio exterior brasileiro até 2030
+
+**[Abrir o painel do TCC](https://yucavalcante.github.io/comercio-exterior-brasileiro/)**
+
+O projeto compara modelos de previsão para o comércio de bens do Brasil. O painel apresenta exportações, importações e saldo anual em US$ FOB nominais. A análise detalhada por país, UF e produto permanece disponível no painel local.
+
+## Questão de pesquisa
+
+Qual modelo projeta com menor erro o valor anual das exportações e importações brasileiras de bens em diferentes horizontes, e qual trajetória ele indica até 2030?
+
+## Protocolo de previsão
+
+1. **Série nacional mensal.** Totais do módulo Dados Gerais do Comex Stat desde janeiro de 1997. A série publicada neste repositório contém apenas totais nacionais mensais. A coleta divide o período em blocos e exige cobertura contínua nos dois fluxos.
+2. **Modelos.** O ingênuo sazonal repete os últimos 12 meses. O Holt-Winters usa tendência amortecida e sazonalidade de 12 meses no log do valor. A regressão log-linear estima uma tendência e efeitos mensais em uma janela fixa de 120 meses. As projeções no log são convertidas por exponenciação e interpretadas como estimativas centrais.
+3. **Validação temporal.** Cada origem treina somente com os meses até o corte daquele ano. O mês de corte reproduz o da projeção publicada. Para um ano parcialmente observado, a estimativa anual soma os meses já observados às previsões dos meses restantes.
+4. **Seleção e teste.** A seleção por fluxo minimiza a média do WAPE anual por horizonte, excluindo a estimativa do próprio ano de corte. Usam-se anos-alvo até 2018 na seleção e anos-alvo posteriores no teste. O WAPE divide a soma dos erros absolutos pela soma dos valores observados. O CSV de validação também registra o erro absoluto médio (MAE), o viés agregado e o número de origens.
+5. **Faixas de projeção.** Os erros relativos históricos são aplicados à parcela ainda projetada no horizonte equivalente. A faixa usa o percentil 80 da magnitude dos erros em torno da estimativa central. Para o saldo, os cenários de exportação e importação são pareados pela origem antes da subtração. O limite inferior de cada fluxo respeita o valor já observado no ano. O painel mostra o número de erros usado. As faixas são empíricas, com amostras pequenas e horizontes sobrepostos.
+
+O teste usa a edição atual da série, sujeita a revisões retroativas do MDIC. As estimativas extrapolam padrões históricos de valores nominais e não incorporam variáveis externas como câmbio, tarifas, preços de commodities ou choques futuros.
+
+[Comex Stat](https://comexstat.mdic.gov.br/pt/home) · [API oficial](https://api-comexstat.mdic.gov.br/docs) · [Hyndman e Athanasopoulos, *Forecasting: Principles and Practice*, 3ª ed.](https://otexts.com/fpp3/)
+
+### Resultados com o corte de outubro de 2026
+
+Foram conferidos **358 meses**, incluindo os 36 meses em comum com o banco DuckDB. Em 2026, a estimativa anual combina janeiro a outubro observados com novembro e dezembro projetados. Os anos seguintes são inteiramente projetados.
+
+| Indicador em 2030 | Valor central (US$ bi FOB) | Faixa empírica (US$ bi FOB) | Modelo |
+|---|---:|---:|---|
+| Exportações | 380,8 | 186,7 a 574,8 | Ingênuo sazonal |
+| Importações | 317,8 | 180,3 a 455,2 | Holt-Winters amortecido |
+| Saldo | 63,0 | 12,8 a 113,2 | Exportações menos importações |
+
+No teste de quatro anos à frente, os modelos selecionados tiveram WAPE de **27,0%** para exportações e **26,8%** para importações, com **sete origens** por fluxo. O viés foi de **−27,0%** e **−26,8%**, respectivamente. O ingênuo sazonal produz o mesmo total para os anos completos futuros, porque repete os valores dos últimos 12 meses observados.
+
+### Reproduzir a projeção
+
+Com o ambiente Python deste repositório instalado, o arquivo de entrada já está em [docs/dados/historico-mensal.csv](docs/dados/historico-mensal.csv).
+
+```powershell
+& .\.venv\Scripts\python.exe -B projecao.py
+& .\.venv\Scripts\python.exe -B -m http.server 8510 --bind 127.0.0.1 --directory docs
+```
+
+Abra `http://127.0.0.1:8510` para ver a versão local. Para atualizar o histórico, execute `forecast_data.py` antes de `projecao.py`. A validação por fluxo, modelo e horizonte está em [docs/dados/validacao.csv](docs/dados/validacao.csv), e os resultados anuais estão em [docs/dados/projecao-anual.csv](docs/dados/projecao-anual.csv).
+
+## Análise exploratória detalhada
 
 Estudo reproduzível sobre a balança comercial de bens do Brasil. O projeto consulta dados oficiais do Comex Stat, valida as agregações com dbt e entrega um painel interativo em Streamlit sobre DuckDB.
 

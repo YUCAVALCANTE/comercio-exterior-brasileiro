@@ -1,0 +1,390 @@
+{
+  "cutoff": "2026-10",
+  "mdic_release": "2026-11-06",
+  "first": "1997-01",
+  "end_year": 2030,
+  "selection_end": 2018,
+  "last_lead": 4,
+  "series_months": 358,
+  "models": {
+    "export": "Ingênuo sazonal",
+    "import": "Holt-Winters amortecido"
+  },
+  "metrics": [
+    {
+      "flow": "export",
+      "model": "Ingênuo sazonal",
+      "selected": true,
+      "selection_wape": 0.191921,
+      "wape_first": 0.085235,
+      "wape_last": 0.269581,
+      "mae_last": 79729752758,
+      "bias_last": -0.269581,
+      "n_last": 7
+    },
+    {
+      "flow": "export",
+      "model": "Holt-Winters amortecido",
+      "selected": false,
+      "selection_wape": 0.245672,
+      "wape_first": 0.095884,
+      "wape_last": 0.244966,
+      "mae_last": 72449701530,
+      "bias_last": -0.244966,
+      "n_last": 7
+    },
+    {
+      "flow": "export",
+      "model": "Regressão log-linear sazonal",
+      "selected": false,
+      "selection_wape": 0.460467,
+      "wape_first": 0.144787,
+      "wape_last": 0.323135,
+      "mae_last": 95568463955,
+      "bias_last": -0.216518,
+      "n_last": 7
+    },
+    {
+      "flow": "import",
+      "model": "Ingênuo sazonal",
+      "selected": false,
+      "selection_wape": 0.274104,
+      "wape_first": 0.139783,
+      "wape_last": 0.250714,
+      "mae_last": 58043960796,
+      "bias_last": -0.250714,
+      "n_last": 7
+    },
+    {
+      "flow": "import",
+      "model": "Holt-Winters amortecido",
+      "selected": true,
+      "selection_wape": 0.219871,
+      "wape_first": 0.133724,
+      "wape_last": 0.268199,
+      "mae_last": 62091961026,
+      "bias_last": -0.268199,
+      "n_last": 7
+    },
+    {
+      "flow": "import",
+      "model": "Regressão log-linear sazonal",
+      "selected": false,
+      "selection_wape": 0.659197,
+      "wape_first": 0.176273,
+      "wape_last": 0.474765,
+      "mae_last": 109915086782,
+      "bias_last": -0.126479,
+      "n_last": 7
+    }
+  ],
+  "annual": [
+    {
+      "year": 1997,
+      "type": "observado",
+      "known_months": 12,
+      "export": 52947495532,
+      "import": 60537962059,
+      "balance": -7590466527
+    },
+    {
+      "year": 1998,
+      "type": "observado",
+      "known_months": 12,
+      "export": 51076603549,
+      "import": 58672860908,
+      "balance": -7596257359
+    },
+    {
+      "year": 1999,
+      "type": "observado",
+      "known_months": 12,
+      "export": 47945909310,
+      "import": 50259540356,
+      "balance": -2313631046
+    },
+    {
+      "year": 2000,
+      "type": "observado",
+      "known_months": 12,
+      "export": 54993159648,
+      "import": 56976350170,
+      "balance": -1983190522
+    },
+    {
+      "year": 2001,
+      "type": "observado",
+      "known_months": 12,
+      "export": 58032294243,
+      "import": 56569020182,
+      "balance": 1463274061
+    },
+    {
+      "year": 2002,
+      "type": "observado",
+      "known_months": 12,
+      "export": 60147158103,
+      "import": 48274763553,
+      "balance": 11872394550
+    },
+    {
+      "year": 2003,
+      "type": "observado",
+      "known_months": 12,
+      "export": 72776746690,
+      "import": 49307163152,
+      "balance": 23469583538
+    },
+    {
+      "year": 2004,
+      "type": "observado",
+      "known_months": 12,
+      "export": 95121672369,
+      "import": 63813636668,
+      "balance": 31308035701
+    },
+    {
+      "year": 2005,
+      "type": "observado",
+      "known_months": 12,
+      "export": 118597835407,
+      "import": 74692215554,
+      "balance": 43905619853
+    },
+    {
+      "year": 2006,
+      "type": "observado",
+      "known_months": 12,
+      "export": 137581151209,
+      "import": 92531096870,
+      "balance": 45050054339
+    },
+    {
+      "year": 2007,
+      "type": "observado",
+      "known_months": 12,
+      "export": 159816383833,
+      "import": 122041949120,
+      "balance": 37774434713
+    },
+    {
+      "year": 2008,
+      "type": "observado",
+      "known_months": 12,
+      "export": 195764624177,
+      "import": 174707087626,
+      "balance": 21057536551
+    },
+    {
+      "year": 2009,
+      "type": "observado",
+      "known_months": 12,
+      "export": 151791674186,
+      "import": 129397611523,
+      "balance": 22394062663
+    },
+    {
+      "year": 2010,
+      "type": "observado",
+      "known_months": 12,
+      "export": 200434134826,
+      "import": 183336964846,
+      "balance": 17097169980
+    },
+    {
+      "year": 2011,
+      "type": "observado",
+      "known_months": 12,
+      "export": 253666309507,
+      "import": 227969756701,
+      "balance": 25696552806
+    },
+    {
+      "year": 2012,
+      "type": "observado",
+      "known_months": 12,
+      "export": 239952538158,
+      "import": 225166426069,
+      "balance": 14786112089
+    },
+    {
+      "year": 2013,
+      "type": "observado",
+      "known_months": 12,
+      "export": 232544255606,
+      "import": 241500886459,
+      "balance": -8956630853
+    },
+    {
+      "year": 2014,
+      "type": "observado",
+      "known_months": 12,
+      "export": 220923236838,
+      "import": 230823018796,
+      "balance": -9899781958
+    },
+    {
+      "year": 2015,
+      "type": "observado",
+      "known_months": 12,
+      "export": 186782355063,
+      "import": 173104259077,
+      "balance": 13678095986
+    },
+    {
+      "year": 2016,
+      "type": "observado",
+      "known_months": 12,
+      "export": 179526129214,
+      "import": 139321357653,
+      "balance": 40204771561
+    },
+    {
+      "year": 2017,
+      "type": "observado",
+      "known_months": 12,
+      "export": 214988108353,
+      "import": 158951444003,
+      "balance": 56036664350
+    },
+    {
+      "year": 2018,
+      "type": "observado",
+      "known_months": 12,
+      "export": 231889523399,
+      "import": 185321983502,
+      "balance": 46567539897
+    },
+    {
+      "year": 2019,
+      "type": "observado",
+      "known_months": 12,
+      "export": 221126807647,
+      "import": 185927967580,
+      "balance": 35198840067
+    },
+    {
+      "year": 2020,
+      "type": "observado",
+      "known_months": 12,
+      "export": 209180241655,
+      "import": 158786824879,
+      "balance": 50393416776
+    },
+    {
+      "year": 2021,
+      "type": "observado",
+      "known_months": 12,
+      "export": 280814577460,
+      "import": 219408049180,
+      "balance": 61406528280
+    },
+    {
+      "year": 2022,
+      "type": "observado",
+      "known_months": 12,
+      "export": 334136038220,
+      "import": 272610686946,
+      "balance": 61525351274
+    },
+    {
+      "year": 2023,
+      "type": "observado",
+      "known_months": 12,
+      "export": 339695766008,
+      "import": 240792839224,
+      "balance": 98902926784
+    },
+    {
+      "year": 2024,
+      "type": "observado",
+      "known_months": 12,
+      "export": 337046161710,
+      "import": 262869606174,
+      "balance": 74176555536
+    },
+    {
+      "year": 2025,
+      "type": "observado",
+      "known_months": 12,
+      "export": 348278462500,
+      "import": 280208433825,
+      "balance": 68070028675
+    },
+    {
+      "year": 2026,
+      "type": "parcial",
+      "known_months": 10,
+      "range_n": 7,
+      "export": 380759080183,
+      "import": 301819318015,
+      "balance": 78939762168,
+      "export_low": 369891689864,
+      "export_high": 391626470502,
+      "import_low": 296100409945,
+      "import_high": 307538226085,
+      "balance_low": 65615363245,
+      "balance_high": 92264161091
+    },
+    {
+      "year": 2027,
+      "type": "projetado",
+      "known_months": 0,
+      "range_n": 7,
+      "export": 380759080183,
+      "import": 316211680439,
+      "balance": 64547399744,
+      "export_low": 305846708627,
+      "export_high": 455671451739,
+      "import_low": 257686275371,
+      "import_high": 374737085507,
+      "balance_low": 16336142931,
+      "balance_high": 112758656557
+    },
+    {
+      "year": 2028,
+      "type": "projetado",
+      "known_months": 0,
+      "range_n": 7,
+      "export": 380759080183,
+      "import": 317656134559,
+      "balance": 63102945624,
+      "export_low": 283598431063,
+      "export_high": 477919729303,
+      "import_low": 235489846490,
+      "import_high": 399822422628,
+      "balance_low": -8831099248,
+      "balance_high": 135036990496
+    },
+    {
+      "year": 2029,
+      "type": "projetado",
+      "known_months": 0,
+      "range_n": 7,
+      "export": 380759080183,
+      "import": 317755769540,
+      "balance": 63003310643,
+      "export_low": 211673123634,
+      "export_high": 549845036732,
+      "import_low": 169548845998,
+      "import_high": 465962693082,
+      "balance_low": 9070139885,
+      "balance_high": 116936481401
+    },
+    {
+      "year": 2030,
+      "type": "projetado",
+      "known_months": 0,
+      "range_n": 7,
+      "export": 380759080183,
+      "import": 317762618170,
+      "balance": 62996462013,
+      "export_low": 186721084121,
+      "export_high": 574797076245,
+      "import_low": 180345794525,
+      "import_high": 455179441815,
+      "balance_low": 12819676737,
+      "balance_high": 113173247289
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Estudo de TCC sobre exportações, importações e saldo comercial de bens do Brasil, com projeções até 2030.">
+  <title>Comércio exterior do Brasil até 2030</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="bar">
+    <div class="shell bar-content">
+      <a class="brand" href="./"><span class="mark" aria-hidden="true">↗</span> Comex Brasil</a>
+      <nav aria-label="Navegação">
+        <a href="#metodo">Metodologia</a>
+        <a href="https://github.com/YUCAVALCANTE/comercio-exterior-brasileiro">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+  <main class="shell" id="conteudo">
+    <section class="intro" aria-labelledby="titulo">
+      <p class="eyebrow">TCC <span></span> SÉRIES TEMPORAIS</p>
+      <h1 id="titulo">Comércio exterior do Brasil <em>até 2030</em></h1>
+      <p class="subtitle">Quanto o Brasil pode exportar e importar em 2030 se os padrões históricos persistirem? Explore os resultados e o desempenho dos modelos em anos anteriores.</p>
+      <p class="source-note" id="cutoff">Carregando a série oficial…</p>
+    </section>
+
+    <p id="load-error" class="notice" role="alert" hidden></p>
+    <noscript><p class="notice">Ative o JavaScript para explorar as projeções.</p></noscript>
+
+    <div id="results" hidden>
+      <section aria-label="Projeção central em 2030" class="cards" id="kpis"></section>
+
+      <section class="panel" aria-labelledby="serie-title">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">01 / SÉRIE ANUAL</p>
+            <h2 id="serie-title">Do histórico à projeção</h2>
+            <p>Valores nominais em bilhões de dólares FOB.</p>
+          </div>
+          <label class="select-label" for="history">Mostrar a partir de
+            <select id="history">
+              <option value="1997">1997</option>
+              <option value="2010" selected>2010</option>
+              <option value="2019">2019</option>
+            </select>
+          </label>
+        </div>
+        <div class="controls">
+          <div class="segments" role="group" aria-label="Indicador">
+            <button type="button" data-series="export" aria-pressed="true">Exportações</button>
+            <button type="button" data-series="import" aria-pressed="false">Importações</button>
+            <button type="button" data-series="balance" aria-pressed="false">Saldo</button>
+          </div>
+          <label class="toggle"><input type="checkbox" id="range" checked> Mostrar faixa empírica</label>
+        </div>
+        <div class="point" id="point" aria-live="polite"></div>
+        <div class="chart-wrap" id="chart-wrap">
+          <svg id="chart" role="img" tabindex="0" aria-describedby="chart-help" aria-label="Série anual com valores observados e projetados"></svg>
+        </div>
+        <div class="legend" aria-label="Legenda">
+          <span><i class="solid"></i> Observado</span>
+          <span><i class="dashed"></i> Ano parcialmente observado ou projetado</span>
+          <span id="range-legend"><i class="band"></i> Faixa empírica</span>
+        </div>
+        <p id="chart-help" class="caption">Passe sobre um ano no gráfico, use as setas do teclado ou consulte a tabela abaixo.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="annual-title">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">02 / VALORES</p>
+            <h2 id="annual-title">Resultados por ano</h2>
+            <p id="annual-description">Valores nominais em US$ bilhões FOB.</p>
+          </div>
+          <a class="button" href="dados/projecao-anual.csv" download>Baixar projeção ↓</a>
+        </div>
+        <div class="table-wrap">
+          <table id="annual" aria-describedby="annual-description">
+            <thead><tr><th scope="col">Ano</th><th scope="col">Situação</th><th scope="col">Valor central</th><th scope="col">Faixa empírica</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" id="metodo" aria-labelledby="method-title">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">03 / METODOLOGIA</p>
+            <h2 id="method-title">Como os modelos foram comparados</h2>
+            <p id="method-text"></p>
+          </div>
+          <a class="button" href="dados/validacao.csv" download>Baixar validação ↓</a>
+        </div>
+        <div class="table-wrap">
+          <table id="scores" aria-describedby="wape">
+            <thead><tr><th scope="col">Fluxo</th><th scope="col">Modelo</th><th scope="col">WAPE de seleção</th><th scope="col">WAPE a 1 ano</th><th scope="col" id="last-lead">WAPE no horizonte final</th><th scope="col" id="last-bias">Viés no horizonte final</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="notes">
+          <p id="wape"><strong>WAPE.</strong> Soma dos erros absolutos dividida pela soma dos valores observados. Quanto menor, melhor. As colunas por horizonte usam os anos de teste. Viés negativo indica subestimação.</p>
+          <p><strong>Faixa empírica.</strong> A largura usa o percentil 80 do erro absoluto no horizonte equivalente. Para o saldo, os erros de exportação e importação são pareados por data de corte. A amostra é pequena e os períodos se sobrepõem, o que limita a interpretação probabilística.</p>
+          <p><strong>Escopo.</strong> Comércio de bens em US$ FOB nominais. A projeção extrapola a série histórica. Câmbio, preços de commodities, tarifas e choques futuros ficam fora dos modelos.</p>
+        </div>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <p>Série nacional de comércio de bens · SECEX / MDIC</p>
+      <div>
+        <a href="https://comexstat.mdic.gov.br/pt/home">Comex Stat ↗</a>
+        <a href="dados/historico-mensal.csv" download>Série mensal ↓</a>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
