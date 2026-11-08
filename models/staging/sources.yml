@@ -1,0 +1,11 @@
+version: 2
+sources:
+  - name: comex
+    schema: raw
+    tables:
+      - name: trade
+        description: Totais mensais do Comex Stat por fluxo, país, UF do produto e capítulo SH.
+      - name: coverage
+        description: Quantidade de registros e meses obtidos por ano e fluxo.
+      - name: totals
+        description: Consulta independente ao Comex Stat sem detalhamentos.

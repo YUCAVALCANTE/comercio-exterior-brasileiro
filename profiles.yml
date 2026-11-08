@@ -1,0 +1,8 @@
+comex_brasil:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: "{{ env_var('COMEX_DB', 'data/comex.duckdb') }}"
+      schema: analytics
+      threads: 2

@@ -1,0 +1,34 @@
+version: 2
+models:
+  - name: fct_trade
+    description: Fato de comércio de bens em grão mês, fluxo, país, UF do produto e capítulo SH.
+    columns:
+      - name: month
+        data_tests: [not_null]
+      - name: flow
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['export', 'import']
+      - name: country
+        data_tests: [not_null]
+      - name: state
+        data_tests: [not_null]
+      - name: chapter
+        data_tests: [not_null]
+      - name: fob_usd
+        data_tests: [not_null]
+      - name: net_kg
+        data_tests: [not_null]
+  - name: mart_monthly
+    description: Série mensal nacional com exportações, importações e saldo em US$ FOB.
+    columns:
+      - name: month
+        data_tests: [not_null, unique]
+      - name: exports_usd
+        data_tests: [not_null]
+      - name: imports_usd
+        data_tests: [not_null]
+  - name: mart_annual
+    description: Valor anual, crescimento nominal e concentração do comércio por país parceiro.

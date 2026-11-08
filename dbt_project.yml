@@ -1,0 +1,13 @@
+name: comex_brasil
+version: "1.0.0"
+config-version: 2
+profile: comex_brasil
+model-paths: ["models"]
+test-paths: ["tests"]
+clean-targets: ["target", "logs"]
+models:
+  comex_brasil:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

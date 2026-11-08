@@ -1,0 +1,8 @@
+/.venv/
+/.tmp/
+/data/
+/target/
+/logs/
+/.user.yml
+__pycache__/
+*.py[cod]
