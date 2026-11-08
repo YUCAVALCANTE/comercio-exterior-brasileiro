@@ -1,0 +1,52 @@
+.air-intro h1 { max-width: 1020px; }
+.air-filters {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1.35fr;
+  align-items: end;
+  gap: .75rem;
+}
+.air-field {
+  min-width: 0;
+  display: grid;
+  gap: .35rem;
+  color: var(--muted);
+  font-size: .84rem;
+  font-weight: 700;
+}
+.air-field select, .air-field input {
+  min-width: 0;
+  width: 100%;
+  height: 2.5rem;
+  font: inherit;
+  border: 1px solid #adc5ba;
+  border-radius: 7px;
+  background: white;
+  padding: .42rem .65rem;
+  color: var(--ink);
+}
+.air-field select:disabled, .air-field input:disabled { opacity: .65; }
+.air-hint { min-height: 1em; }
+.air-period {
+  grid-template-columns: minmax(120px, .7fr) minmax(120px, .7fr) minmax(150px, 1.2fr) minmax(175px, 1fr);
+  border-top: 1px solid var(--line);
+  padding-top: .9rem;
+  margin-top: .9rem;
+}
+.air-metric .segments button { min-height: 2.5rem; }
+.air-intro .source-note { display: inline-block; }
+.air-notes { margin-top: 0; }
+.destinations { max-height: 470px; }
+.destinations thead { position: sticky; top: 0; }
+.rank-share { min-width: 130px; }
+.rank-share progress { width: 75px; height: .65rem; margin-right: .35rem; vertical-align: middle; accent-color: var(--accent); }
+#status:not(:empty) { color: #764719; font-weight: 700; }
+@media (max-width: 800px) {
+  .air-filters, .air-period { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .air-origin { grid-column: 1 / -1; }
+}
+@media (max-width: 480px) {
+  .air-filters { grid-template-columns: 1fr; }
+  .air-period { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .air-country, .air-metric { grid-column: 1 / -1; }
+  .air-metric .segments button { flex: 1; }
+}

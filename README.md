@@ -4,6 +4,25 @@
 
 O projeto compara modelos de previsão para o comércio de bens do Brasil. O painel apresenta exportações, importações e saldo anual em US$ FOB nominais. A análise detalhada por país, UF e produto permanece disponível no painel local.
 
+## Subprojeto de exportações aéreas
+
+**[Abrir aeroportos, produtos e destinos](https://yucavalcante.github.io/comercio-exterior-brasileiro/aeroportos/)** · [Ver mamão em Salvador](https://yucavalcante.github.io/comercio-exterior-brasileiro/aeroportos/?origem=0517801&produto=08072000)
+
+O painel permite escolher a unidade de embarque, procurar um produto por nome ou NCM, filtrar período e país, acompanhar a curva mensal de peso ou valor FOB e baixar o recorte. São **46 meses**, de janeiro de 2023 a outubro de 2026, **7.533 códigos NCM** e **21 URFs** com exportações na via aérea. Onze códigos têm aeroporto identificado na descrição oficial.
+
+O extrato usa os CSVs nacionais de exportação do Comex Stat com a via `04`. Cada observação do painel agrega mês, URF de embarque, NCM e país de destino. Os totais de peso e FOB dos 46 meses foram reconciliados com a API oficial. As unidades regionais são exibidas separadamente, pois podem agrupar pontos físicos. O país se refere ao destino declarado da mercadoria. A base não informa o aeroporto de chegada nem as escalas. [Dicionários e microdados do MDIC](https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta)
+
+No exemplo do **mamão fresco (08072000)** na URF do Aeroporto Internacional de Salvador, a base registra **9,32 milhões de kg** e **US$ 12,09 milhões FOB** no período. Portugal foi o principal destino em peso, com **6,26 milhões de kg**.
+
+Para reproduzir o extrato localmente, instale os requisitos do projeto e execute:
+
+```powershell
+& .\.venv\Scripts\python.exe -B air_source.py 2023 2024 2025 2026
+& .\.venv\Scripts\python.exe -B air_build.py --start 2023-01 --end 2026-10
+```
+
+Os CSVs brutos ficam em `data/air-source/`. O site carrega os dados agregados por URF e capítulo NCM conforme o recorte selecionado.
+
 ## Questão de pesquisa
 
 Qual modelo projeta com menor erro o valor anual das exportações e importações brasileiras de bens em diferentes horizontes, e qual trajetória ele indica até 2030?
