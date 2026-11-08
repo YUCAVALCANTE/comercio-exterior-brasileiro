@@ -1,9 +1,9 @@
 "use strict";
 
 const labels = {
-  export: { name: "Exportações", color: "#08725d" },
-  import: { name: "Importações", color: "#225eaa" },
-  balance: { name: "Saldo comercial", color: "#8b4b16" },
+  export: { name: "Exportações", color: "#0066cc" },
+  import: { name: "Importações", color: "#7150a5" },
+  balance: { name: "Saldo comercial", color: "#246957" },
 };
 const types = {
   observado: "Observado",
@@ -147,7 +147,7 @@ function drawChart() {
   byId("range-legend").hidden = !bandVisible;
   if (projected.length) {
     const shade = Math.max(left, x(projected[0].year - 0.5));
-    chart.append(svg("rect", { x: shade, y: top, width: right - shade, height: bottom - top, fill: "#f8f5e9" }));
+    chart.append(svg("rect", { x: shade, y: top, width: right - shade, height: bottom - top, class: "forecast-fill" }));
     if (right - shade > 90) {
       chart.append(svg("text", { x: right - 6, y: 15, "text-anchor": "end", class: "annotation" }, "PROJEÇÃO"));
     }

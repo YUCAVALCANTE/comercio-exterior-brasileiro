@@ -1,48 +1,54 @@
-.air-intro h1 { max-width: 1020px; }
 .air-filters {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1.35fr;
   align-items: end;
-  gap: .75rem;
+  gap: 12px;
 }
 .air-field {
   min-width: 0;
   display: grid;
-  gap: .35rem;
+  gap: 4px;
   color: var(--muted);
-  font-size: .84rem;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
 }
 .air-field select, .air-field input {
   min-width: 0;
   width: 100%;
-  height: 2.5rem;
+  height: 38px;
   font: inherit;
-  border: 1px solid #adc5ba;
-  border-radius: 7px;
-  background: white;
-  padding: .42rem .65rem;
-  color: var(--ink);
+  font-weight: 450;
 }
 .air-field select:disabled, .air-field input:disabled { opacity: .65; }
 .air-hint { min-height: 1em; }
 .air-period {
   grid-template-columns: minmax(120px, .7fr) minmax(120px, .7fr) minmax(150px, 1.2fr) minmax(175px, 1fr);
-  border-top: 1px solid var(--line);
-  padding-top: .9rem;
-  margin-top: .9rem;
+  border-top: 1px solid #e5e5ea;
+  padding-top: 12px;
+  margin-top: 12px;
 }
-.air-metric .segments button { min-height: 2.5rem; }
-.air-intro .source-note { display: inline-block; }
+.air-metric .segments button { min-height: 38px; }
+#air-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+#air-kpis .kpi:last-child { background: var(--soft); border-radius: 0 var(--radius) var(--radius) 0; }
+#air-kpis .kpi-number { overflow-wrap: anywhere; }
 .air-notes { margin-top: 0; }
-.destinations { max-height: 470px; }
+.forecast-details { border-top: 1px solid #e5e5ea; margin-top: 20px; padding-top: 16px; }
+.forecast-details th { white-space: nowrap; }
+.destinations { max-height: 460px; }
 .destinations thead { position: sticky; top: 0; }
 .rank-share { min-width: 130px; }
-.rank-share progress { width: 75px; height: .65rem; margin-right: .35rem; vertical-align: middle; accent-color: var(--accent); }
-#status:not(:empty) { color: #764719; font-weight: 700; }
+.rank-share progress { width: 72px; height: 8px; margin-right: 6px; vertical-align: middle; }
+#air-status:empty { display: none; }
+#air-status:not(:empty) { color: #794716; }
 @media (max-width: 800px) {
   .air-filters, .air-period { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .air-origin { grid-column: 1 / -1; }
+  #air-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #air-kpis .kpi:nth-child(n+3) { border-top: 1px solid var(--line); }
+  #air-kpis .kpi:nth-child(odd) { border-left: 0; }
+  #air-kpis .kpi:nth-child(even) { border-left: 1px solid var(--line); }
+  #air-kpis .kpi:nth-child(2) { border-top: 0; }
+  #air-kpis .kpi:last-child { border-radius: 0 0 var(--radius) 0; }
 }
 @media (max-width: 480px) {
   .air-filters { grid-template-columns: 1fr; }

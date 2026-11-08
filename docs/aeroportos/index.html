@@ -3,132 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore as exportações brasileiras por via aérea, unidade de embarque, produto e país de destino.">
-  <title>Exportações aéreas por produto · Comex Brasil</title>
-  <link rel="stylesheet" href="../styles.css">
-  <link rel="stylesheet" href="aeroportos.css">
-  <script src="aeroportos.js" defer></script>
+  <title>Aeroportos · Comex Brasil</title>
+  <link rel="canonical" href="../?visao=aeroportos">
+  <script>
+    const url = new URL("../", location.href);
+    url.search = location.search;
+    url.searchParams.set("visao", "aeroportos");
+    url.hash = location.hash === "#metodo" ? "#air-metodo" : location.hash;
+    location.replace(url);
+  </script>
 </head>
-<body>
-  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
-  <header class="bar">
-    <div class="shell bar-content">
-      <a class="brand" href="../"><span class="mark" aria-hidden="true">↗</span> Comex Brasil</a>
-      <nav aria-label="Navegação">
-        <a href="../">Projeção até 2030</a>
-        <a href="#metodo">Fonte e cobertura</a>
-      </nav>
-    </div>
-  </header>
-  <main class="shell" id="conteudo">
-    <section class="intro air-intro" aria-labelledby="title">
-      <p class="eyebrow">TCC <span></span> EXPORTAÇÕES AÉREAS</p>
-      <h1 id="title">O que sai de cada <em>aeroporto?</em></h1>
-      <p class="subtitle">Escolha o ponto de embarque e o produto para acompanhar as exportações mês a mês e ver quais países receberam a mercadoria.</p>
-      <p class="source-note" id="coverage">Carregando a cobertura oficial…</p>
-    </section>
-
-    <p class="notice" id="error" role="alert" hidden></p>
-    <noscript><p class="notice">Ative o JavaScript para explorar os embarques.</p></noscript>
-
-    <div id="explorer" hidden>
-      <section class="panel" aria-labelledby="filters-title">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">01 / RECORTE</p>
-            <h2 id="filters-title">Filtre os embarques</h2>
-          </div>
-          <button class="button" id="example" type="button" hidden>Ver mamão em Salvador</button>
-        </div>
-        <div class="air-filters">
-          <label class="air-field air-origin" for="origin">Aeroporto ou URF de embarque
-            <select id="origin" aria-describedby="origin-note"></select>
-          </label>
-          <label class="air-field" for="search">Buscar por nome ou NCM
-            <input id="search" type="search" placeholder="Ex. mamão ou 08072000" autocomplete="off" aria-describedby="search-note">
-          </label>
-          <label class="air-field air-product" for="product">Produto
-            <select id="product" aria-describedby="search-note"></select>
-          </label>
-        </div>
-        <p class="caption air-hint" id="origin-note"></p>
-        <p class="caption air-hint" id="search-note" aria-live="polite"></p>
-        <div class="air-filters air-period">
-          <label class="air-field" for="from">Mês inicial
-            <input id="from" type="month">
-          </label>
-          <label class="air-field" for="to">Mês final
-            <input id="to" type="month">
-          </label>
-          <label class="air-field air-country" for="destination">País de destino
-            <select id="destination"></select>
-          </label>
-          <div class="air-field air-metric">
-            <span id="metric-label">Métrica do gráfico</span>
-            <div class="segments" role="group" aria-labelledby="metric-label">
-              <button type="button" data-metric="kg" aria-pressed="true">Peso líquido</button>
-              <button type="button" data-metric="fob" aria-pressed="false">Valor FOB</button>
-            </div>
-          </div>
-        </div>
-        <p class="caption" role="status" id="status"></p>
-      </section>
-
-      <div id="results" hidden>
-        <section id="kpis" class="cards" aria-label="Totais do recorte"></section>
-
-        <section class="panel" aria-labelledby="series-title">
-          <div class="panel-head">
-            <div>
-              <p class="eyebrow">02 / CURVA MENSAL</p>
-              <h2 id="series-title">Embarques ao longo do tempo</h2>
-              <p id="series-description"></p>
-            </div>
-            <button class="button" id="download" type="button">Baixar recorte CSV ↓</button>
-          </div>
-          <p class="point" id="point" aria-live="polite"></p>
-          <div class="chart-wrap" id="chart-wrap">
-            <svg id="chart" role="img" tabindex="0" aria-describedby="chart-help" aria-label="Série mensal dos embarques"></svg>
-          </div>
-          <p class="caption" id="chart-help">Passe sobre um mês ou use as setas do teclado. O zero indica ausência de valor registrado no recorte do mês.</p>
-        </section>
-
-        <section class="panel" aria-labelledby="destinations-title">
-          <div class="panel-head">
-            <div>
-              <p class="eyebrow">03 / DESTINOS</p>
-              <h2 id="destinations-title">Para onde foi?</h2>
-              <p id="rank-note"></p>
-            </div>
-          </div>
-          <div class="table-wrap destinations">
-            <table id="rank">
-              <thead><tr><th scope="col">País de destino</th><th scope="col">Peso líquido (kg)</th><th scope="col">Valor (US$ FOB)</th><th scope="col">Participação</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </section>
-      </div>
-    </div>
-
-    <section class="panel" id="metodo" aria-labelledby="method-title">
-      <div class="panel-head">
-        <div>
-          <p class="eyebrow">04 / FONTE E COBERTURA</p>
-          <h2 id="method-title">O que o painel mede</h2>
-        </div>
-      </div>
-      <div class="notes air-notes">
-        <p><strong>Embarque.</strong> O painel inclui todas as Unidades da Receita Federal (URFs) com registros de exportação na via aérea (código 04) no período. Quando a descrição oficial identifica um aeroporto, a unidade aparece no grupo de aeroportos. Outras URFs ficam em um grupo separado, pois uma unidade regional pode atender mais de um ponto físico.</p>
-        <p><strong>Produto e destino.</strong> Os produtos usam a Nomenclatura Comum do Mercosul (NCM) de oito dígitos. O país é o destino declarado da mercadoria. A base não informa o aeroporto de chegada nem as escalas.</p>
-        <p><strong>Medidas.</strong> O painel soma peso líquido em quilogramas e valor nominal em dólares FOB. Os totais mensais foram conferidos com uma consulta separada ao Comex Stat.</p>
-        <p><a href="https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta">Microdados e dicionários do MDIC ↗</a></p>
-      </div>
-    </section>
-    <footer class="footer">
-      <p>Exportações brasileiras de bens · SECEX / MDIC</p>
-      <div><a href="../">Voltar à projeção nacional</a><a href="https://github.com/YUCAVALCANTE/comercio-exterior-brasileiro">Código e método ↗</a></div>
-    </footer>
-  </main>
-</body>
+<body><a href="../?visao=aeroportos">Abrir exportações por aeroporto</a></body>
 </html>

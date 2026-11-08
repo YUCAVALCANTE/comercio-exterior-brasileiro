@@ -6,25 +6,27 @@
   <meta name="description" content="Estudo de TCC sobre exportações, importações e saldo comercial de bens do Brasil, com projeções até 2030.">
   <title>Comércio exterior do Brasil até 2030</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="dashboard.js" defer></script>
+  <link rel="stylesheet" href="aeroportos/aeroportos.css">
+  <script type="module" src="router.mjs"></script>
 </head>
 <body>
   <a class="skip" href="#conteudo">Pular para o conteúdo</a>
   <header class="bar">
     <div class="shell bar-content">
-      <a class="brand" href="./"><span class="mark" aria-hidden="true">↗</span> Comex Brasil</a>
+      <a class="brand" href="./">Comex Brasil</a>
       <nav aria-label="Navegação">
-        <a href="aeroportos/">Aeroportos</a>
-        <a href="#metodo">Metodologia</a>
+        <a href="?visao=nacional" data-view="nacional" aria-current="page">Visão nacional</a>
+        <a href="?visao=aeroportos" data-view="aeroportos">Aeroportos</a>
         <a href="https://github.com/YUCAVALCANTE/comercio-exterior-brasileiro">GitHub ↗</a>
       </nav>
     </div>
   </header>
   <main class="shell" id="conteudo">
+    <div id="view-national">
     <section class="intro" aria-labelledby="titulo">
-      <p class="eyebrow">TCC <span></span> SÉRIES TEMPORAIS</p>
-      <h1 id="titulo">Comércio exterior do Brasil <em>até 2030</em></h1>
-      <p class="subtitle">Quanto o Brasil pode exportar e importar em 2030 se os padrões históricos persistirem? Explore os resultados e o desempenho dos modelos em anos anteriores.</p>
+      <p class="eyebrow">Comércio exterior brasileiro</p>
+      <h1 id="titulo" tabindex="-1">Comércio exterior do Brasil</h1>
+      <p class="subtitle">Histórico de exportações, importações e saldo comercial. Projeção nacional até 2030.</p>
       <p class="source-note" id="cutoff">Carregando a série oficial…</p>
     </section>
 
@@ -37,7 +39,6 @@
       <section class="panel" aria-labelledby="serie-title">
         <div class="panel-head">
           <div>
-            <p class="eyebrow">01 / SÉRIE ANUAL</p>
             <h2 id="serie-title">Do histórico à projeção</h2>
             <p>Valores nominais em bilhões de dólares FOB.</p>
           </div>
@@ -72,7 +73,6 @@
       <section class="panel" aria-labelledby="annual-title">
         <div class="panel-head">
           <div>
-            <p class="eyebrow">02 / VALORES</p>
             <h2 id="annual-title">Resultados por ano</h2>
             <p id="annual-description">Valores nominais em US$ bilhões FOB.</p>
           </div>
@@ -89,7 +89,6 @@
       <section class="panel" id="metodo" aria-labelledby="method-title">
         <div class="panel-head">
           <div>
-            <p class="eyebrow">03 / METODOLOGIA</p>
             <h2 id="method-title">Como os modelos foram comparados</h2>
             <p id="method-text"></p>
           </div>
@@ -109,11 +108,133 @@
       </section>
     </div>
 
+    </div>
+    <div id="view-air" hidden>
+    <section class="intro air-intro" aria-labelledby="air-title">
+      <p class="eyebrow">Comércio exterior brasileiro</p>
+      <h1 id="air-title" tabindex="-1">Exportações por aeroporto</h1>
+      <p class="subtitle">Escolha a origem e o produto para acompanhar o histórico, a projeção mensal e os países de destino.</p>
+      <p class="source-note" id="air-coverage">Carregando a cobertura oficial…</p>
+    </section>
+
+    <p class="notice" id="air-error" role="alert" hidden></p>
+    <noscript><p class="notice">Ative o JavaScript para explorar os embarques.</p></noscript>
+
+    <div id="air-explorer" hidden>
+      <section class="panel" aria-labelledby="air-filters-title">
+        <div class="panel-head">
+          <div>
+
+            <h2 id="air-filters-title">Filtre os embarques</h2>
+          </div>
+          <button class="button" id="air-example" type="button" hidden>Ver mamão em Salvador</button>
+        </div>
+        <div class="air-filters">
+          <label class="air-field air-origin" for="air-origin">Aeroporto ou URF de embarque
+            <select id="air-origin" aria-describedby="air-origin-note"></select>
+          </label>
+          <label class="air-field" for="air-search">Buscar por nome ou NCM
+            <input id="air-search" type="search" placeholder="Ex. mamão ou 08072000" autocomplete="off" aria-describedby="air-search-note">
+          </label>
+          <label class="air-field air-product" for="air-product">Produto
+            <select id="air-product" aria-describedby="air-search-note"></select>
+          </label>
+        </div>
+        <p class="caption air-hint" id="air-origin-note"></p>
+        <p class="caption air-hint" id="air-search-note" aria-live="polite"></p>
+        <div class="air-filters air-period">
+          <label class="air-field" for="air-from">Mês inicial
+            <input id="air-from" type="month">
+          </label>
+          <label class="air-field" for="air-to">Mês final
+            <input id="air-to" type="month">
+          </label>
+          <label class="air-field air-country" for="air-destination">País de destino
+            <select id="air-destination"></select>
+          </label>
+          <div class="air-field air-metric">
+            <span id="air-metric-label">Métrica do gráfico</span>
+            <div class="segments" role="group" aria-labelledby="air-metric-label">
+              <button type="button" data-metric="kg" aria-pressed="true">Peso líquido</button>
+              <button type="button" data-metric="fob" aria-pressed="false">Valor FOB</button>
+            </div>
+          </div>
+        </div>
+        <p class="caption" role="status" id="air-status"></p>
+      </section>
+
+      <div id="air-results" hidden>
+        <section id="air-kpis" class="cards" aria-label="Totais do recorte"></section>
+
+        <section class="panel" aria-labelledby="air-series-title">
+          <div class="panel-head">
+            <div>
+
+              <h2 id="air-series-title">Histórico e projeção</h2>
+              <p id="air-series-description"></p>
+            </div>
+            <button class="button" id="air-download" type="button">Baixar recorte CSV ↓</button>
+          </div>
+          <div class="chart-options">
+            <div class="legend"><span><i class="solid"></i> Observado</span><span id="air-forecast-legend"><i class="dashed"></i> Projeção mensal</span></div>
+            <label class="toggle"><input id="air-forecast-toggle" type="checkbox" checked> Mostrar projeção</label>
+          </div>
+          <p class="point" id="air-point" aria-live="polite"></p>
+          <div class="chart-wrap" id="air-chart-wrap">
+            <svg id="air-chart" role="img" tabindex="0" aria-describedby="air-chart-help" aria-label="Série mensal dos embarques"></svg>
+          </div>
+          <p class="caption" id="air-chart-help">Use o cursor ou as setas do teclado para ler os meses. Zero indica ausência de valor registrado.</p>
+          <div class="forecast-details">
+            <div class="panel-head">
+              <div><h3>Projeção anual do recorte</h3><p id="air-forecast-note" role="status"></p></div>
+              <button class="button" id="air-forecast-csv" type="button">Baixar projeção CSV ↓</button>
+            </div>
+            <div class="table-wrap" id="air-forecast-table">
+              <table id="air-annual"><thead><tr><th scope="col">Ano</th><th scope="col">Observado</th><th scope="col">Projetado</th><th scope="col">Total estimado</th></tr></thead><tbody></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="air-destinations-title">
+          <div class="panel-head">
+            <div>
+
+              <h2 id="air-destinations-title">Países de destino</h2>
+              <p id="air-rank-note"></p>
+            </div>
+          </div>
+          <div class="table-wrap destinations">
+            <table id="air-rank">
+              <thead><tr><th scope="col">País de destino</th><th scope="col">Peso líquido (kg)</th><th scope="col">Valor (US$ FOB)</th><th scope="col">Participação</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <section class="panel" id="air-metodo" aria-labelledby="air-method-title">
+      <div class="panel-head">
+        <div>
+
+          <h2 id="air-method-title">O que o painel mede</h2>
+        </div>
+      </div>
+      <div class="notes air-notes">
+        <p><strong>Embarque.</strong> O painel inclui todas as Unidades da Receita Federal (URFs) com registros de exportação na via aérea (código 04) no período. Quando a descrição oficial identifica um aeroporto, a unidade aparece no grupo de aeroportos. Outras URFs ficam em um grupo separado, pois uma unidade regional pode atender mais de um ponto físico.</p>
+        <p><strong>Produto e destino.</strong> Os produtos usam a Nomenclatura Comum do Mercosul (NCM) de oito dígitos. O país é o destino declarado da mercadoria. A base não informa o aeroporto de chegada nem as escalas.</p>
+        <p><strong>Medidas.</strong> O painel soma peso líquido em quilogramas e valor nominal em dólares FOB. Os totais mensais foram conferidos com uma consulta separada ao Comex Stat.</p>
+        <p><strong>Projeção do recorte.</strong> Três modelos de referência são comparados por WAPE em janelas históricas de 12 meses. São exigidos 36 meses de cobertura e pelo menos três meses com valor positivo em cada um dos dois blocos recentes de 12 meses. A estimativa usa o histórico completo do aeroporto, produto e destino selecionados. Os campos de datas filtram os registros observados. O horizonte até 2030 é uma extrapolação do padrão sazonal, sem faixa calibrada para esse prazo.</p>
+        <p><a href="https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta">Microdados e dicionários do MDIC ↗</a></p>
+      </div>
+    </section>
+    </div>
     <footer class="footer">
       <p>Série nacional de comércio de bens · SECEX / MDIC</p>
       <div>
         <a href="https://comexstat.mdic.gov.br/pt/home">Comex Stat ↗</a>
         <a href="dados/historico-mensal.csv" download>Série mensal ↓</a>
+        <a href="https://github.com/YUCAVALCANTE/comercio-exterior-brasileiro">Código no GitHub ↗</a>
       </div>
     </footer>
   </main>

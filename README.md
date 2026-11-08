@@ -4,9 +4,9 @@
 
 O projeto compara modelos de previsão para o comércio de bens do Brasil. O painel apresenta exportações, importações e saldo anual em US$ FOB nominais. A análise detalhada por país, UF e produto permanece disponível no painel local.
 
-## Subprojeto de exportações aéreas
+## Exportações aéreas por produto
 
-**[Abrir aeroportos, produtos e destinos](https://yucavalcante.github.io/comercio-exterior-brasileiro/aeroportos/)** · [Ver mamão em Salvador](https://yucavalcante.github.io/comercio-exterior-brasileiro/aeroportos/?origem=0517801&produto=08072000)
+**[Abrir aeroportos, produtos e destinos](https://yucavalcante.github.io/comercio-exterior-brasileiro/?visao=aeroportos)** · [Ver mamão em Salvador](https://yucavalcante.github.io/comercio-exterior-brasileiro/?visao=aeroportos&origem=0517801&produto=08072000)
 
 O painel permite escolher a unidade de embarque, procurar um produto por nome ou NCM, filtrar período e país, acompanhar a curva mensal de peso ou valor FOB e baixar o recorte. São **46 meses**, de janeiro de 2023 a outubro de 2026, **7.533 códigos NCM** e **21 URFs** com exportações na via aérea. Onze códigos têm aeroporto identificado na descrição oficial.
 
@@ -22,6 +22,12 @@ Para reproduzir o extrato localmente, instale os requisitos do projeto e execute
 ```
 
 Os CSVs brutos ficam em `data/air-source/`. O site carrega os dados agregados por URF e capítulo NCM conforme o recorte selecionado.
+
+A visão de aeroportos faz parte da mesma página da projeção nacional. A curva mensal e a tabela anual projetam o aeroporto, o NCM e o destino selecionados, em kg ou US$ FOB. Comparam-se o ingênuo sazonal, a média sazonal de dois anos e a média dos últimos 12 meses por WAPE mensal em janelas de 12 meses. Exigem-se 36 meses de cobertura e três meses positivos em cada um dos dois blocos recentes de 12 meses. O modelo selecionado estende o padrão estimado até dezembro de 2030. O erro histórico mede as janelas de 12 meses e a série por recorte não tem faixa calibrada para o prazo de 2030.
+
+No recorte de mamão fresco em Salvador, a média dos últimos 12 meses foi selecionada para peso líquido. A estimativa anual em 2030 é **2,76 milhões de kg**, com WAPE de **40,5%** nas 11 janelas históricas de 12 meses.
+
+A paleta, a tipografia e os componentes compartilhados estão documentados em [DESIGN.md](DESIGN.md).
 
 ## Questão de pesquisa
 
