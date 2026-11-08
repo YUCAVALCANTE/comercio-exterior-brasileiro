@@ -1,18 +1,19 @@
 # Design do painel Comex Brasil
 
-A interface usa hierarquia tipográfica, superfícies discretas e controles nativos. A referência é a orientação de simplicidade, consistência e uso semântico de cor das diretrizes da Apple. [Princípios de design](https://developer.apple.com/design/human-interface-guidelines/design-principles) · [Cor](https://developer.apple.com/design/human-interface-guidelines/color)
+A interface segue a composição de um observatório econômico. Os filtros ficam numa coluna de leitura, enquanto a mercadoria, a série histórica e os valores de referência ocupam o espaço principal. No celular, os filtros vêm antes da série.
 
 | Token | Valor | Aplicação |
 |---|---|---|
-| Plano de fundo | `#f5f5f7` | Área de trabalho |
-| Superfície | `#ffffff` | Gráficos, filtros e tabelas |
-| Texto | `#1d1d1f` | Títulos, valores e dados |
-| Texto secundário | `#515154` | Descrições, unidades e fonte |
-| Ação | `#0066cc` | Links, seleção e foco |
-| Separador | `#d2d2d7` | Divisórias e limites de controles |
-| Séries | `#0066cc`, `#7150a5`, `#246957` | Exportações, importações e saldo nacional |
+| Papel | `#f2eee5` | Fundo da página |
+| Superfície | `#fcfaf4` | Filtros, gráficos e tabelas |
+| Texto | `#2c3129` | Títulos, valores e dados |
+| Texto secundário | `#595d50` | Períodos, unidades e fonte |
+| Verde-oliva | `#435a40` | Ações, seleção e série observada em kg |
+| Ameixa | `#6f5465` | Série observada em valor FOB no recorte aéreo |
+| Terracota | `#9b4a32` | Projeção e leitura destacada de 2030 |
+| Separador | `#d7cfc0` | Divisórias, limites de painéis e cartões |
 
-- Tipografia de sistema e números tabulares para facilitar a comparação. Títulos entre 36 e 56 px, títulos de seção entre 22 e 27 px e texto entre 14 e 16 px.
-- Espaçamento em múltiplos de 4 px, com superfícies brancas, bordas finas e raio de 12 px.
-- Navegação de duas visões na mesma página. Filtros mantêm rótulos visíveis e foco de teclado. A projeção usa traço interrompido, com legenda e estado explícito na leitura de cada ponto.
-- A hierarquia se mantém no celular. Os filtros reorganizam em colunas e as tabelas permitem rolagem horizontal.
+- Títulos em Georgia. Controles e texto em fonte de sistema. Valores tabulares e eixo em fonte monoespaçada.
+- Superfícies de papel, bordas finas e raio de 4 px. Indicadores alinhados em uma faixa, com divisórias.
+- A série observada tem linha contínua. A projeção aérea tem traço interrompido e área levemente tingida. A legenda e a leitura por teclado informam o estado de cada ponto.
+- Filtros com rótulos visíveis, foco de teclado e reorganização por largura de tela. Tabelas largas permitem rolagem horizontal.

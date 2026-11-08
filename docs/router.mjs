@@ -1,6 +1,6 @@
 const views = {
-  nacional: { panel: document.getElementById("view-national"), load: () => import("./dashboard.js") },
-  aeroportos: { panel: document.getElementById("view-air"), load: () => import("./aeroportos/aeroportos.js") },
+  nacional: { panel: document.getElementById("view-national"), load: () => import("./dashboard.js?v=editorial") },
+  aeroportos: { panel: document.getElementById("view-air"), load: () => import("./aeroportos/aeroportos.js?v=editorial") },
 };
 const navigation = [...document.querySelectorAll("[data-view]")];
 

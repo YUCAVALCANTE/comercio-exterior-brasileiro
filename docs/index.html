@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Estudo de TCC sobre exportações, importações e saldo comercial de bens do Brasil, com projeções até 2030.">
   <title>Comércio exterior do Brasil até 2030</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="aeroportos/aeroportos.css">
-  <script type="module" src="router.mjs"></script>
+  <link rel="stylesheet" href="styles.css?v=editorial">
+  <link rel="stylesheet" href="aeroportos/aeroportos.css?v=editorial">
+  <script type="module" src="router.mjs?v=editorial"></script>
 </head>
 <body>
   <a class="skip" href="#conteudo">Pular para o conteúdo</a>
@@ -24,7 +24,7 @@
   <main class="shell" id="conteudo">
     <div id="view-national">
     <section class="intro" aria-labelledby="titulo">
-      <p class="eyebrow">Comércio exterior brasileiro</p>
+      <p class="eyebrow">Observatório de comércio exterior</p>
       <h1 id="titulo" tabindex="-1">Comércio exterior do Brasil</h1>
       <p class="subtitle">Histórico de exportações, importações e saldo comercial. Projeção nacional até 2030.</p>
       <p class="source-note" id="cutoff">Carregando a série oficial…</p>
@@ -34,9 +34,7 @@
     <noscript><p class="notice">Ative o JavaScript para explorar as projeções.</p></noscript>
 
     <div id="results" hidden>
-      <section aria-label="Projeção central em 2030" class="cards" id="kpis"></section>
-
-      <section class="panel" aria-labelledby="serie-title">
+      <section class="panel chart-panel" aria-labelledby="serie-title">
         <div class="panel-head">
           <div>
             <h2 id="serie-title">Do histórico à projeção</h2>
@@ -50,6 +48,7 @@
             </select>
           </label>
         </div>
+        <section aria-label="Projeção central em 2030" class="cards" id="kpis"></section>
         <div class="controls">
           <div class="segments" role="group" aria-label="Indicador">
             <button type="button" data-series="export" aria-pressed="true">Exportações</button>
@@ -64,7 +63,7 @@
         </div>
         <div class="legend" aria-label="Legenda">
           <span><i class="solid"></i> Observado</span>
-          <span><i class="dashed"></i> Ano parcialmente observado ou projetado</span>
+          <span><i class="dashed"></i> Projeção, inclusive ano parcial</span>
           <span id="range-legend"><i class="band"></i> Faixa empírica</span>
         </div>
         <p id="chart-help" class="caption">Passe sobre um ano no gráfico, use as setas do teclado ou consulte a tabela abaixo.</p>
@@ -111,9 +110,8 @@
     </div>
     <div id="view-air" hidden>
     <section class="intro air-intro" aria-labelledby="air-title">
-      <p class="eyebrow">Comércio exterior brasileiro</p>
+      <p class="eyebrow">Série mensal · Exportações brasileiras</p>
       <h1 id="air-title" tabindex="-1">Exportações por aeroporto</h1>
-      <p class="subtitle">Escolha a origem e o produto para acompanhar o histórico, a projeção mensal e os países de destino.</p>
       <p class="source-note" id="air-coverage">Carregando a cobertura oficial…</p>
     </section>
 
@@ -121,19 +119,18 @@
     <noscript><p class="notice">Ative o JavaScript para explorar os embarques.</p></noscript>
 
     <div id="air-explorer" hidden>
-      <section class="panel" aria-labelledby="air-filters-title">
+      <section class="panel filter-rail" aria-labelledby="air-filters-title">
         <div class="panel-head">
           <div>
 
-            <h2 id="air-filters-title">Filtre os embarques</h2>
+            <h2 id="air-filters-title">Recorte</h2>
           </div>
-          <button class="button" id="air-example" type="button" hidden>Ver mamão em Salvador</button>
         </div>
         <div class="air-filters">
-          <label class="air-field air-origin" for="air-origin">Aeroporto ou URF de embarque
+          <label class="air-field air-origin" for="air-origin">Origem do embarque
             <select id="air-origin" aria-describedby="air-origin-note"></select>
           </label>
-          <label class="air-field" for="air-search">Buscar por nome ou NCM
+          <label class="air-field" for="air-search">Buscar mercadoria
             <input id="air-search" type="search" placeholder="Ex. mamão ou 08072000" autocomplete="off" aria-describedby="air-search-note">
           </label>
           <label class="air-field air-product" for="air-product">Produto
@@ -161,20 +158,21 @@
           </div>
         </div>
         <p class="caption" role="status" id="air-status"></p>
+        <button class="text-button" id="air-example" type="button" hidden>Exemplo · Mamão em Salvador</button>
       </section>
 
       <div id="air-results" hidden>
-        <section id="air-kpis" class="cards" aria-label="Totais do recorte"></section>
-
-        <section class="panel" aria-labelledby="air-series-title">
+        <section class="panel chart-panel" aria-labelledby="air-series-title">
           <div class="panel-head">
             <div>
 
+              <p class="eyebrow chart-eyebrow" id="air-series-kicker">Série mensal</p>
               <h2 id="air-series-title">Histórico e projeção</h2>
               <p id="air-series-description"></p>
             </div>
             <button class="button" id="air-download" type="button">Baixar recorte CSV ↓</button>
           </div>
+          <section id="air-kpis" class="cards" aria-label="Totais e projeção do recorte"></section>
           <div class="chart-options">
             <div class="legend"><span><i class="solid"></i> Observado</span><span id="air-forecast-legend"><i class="dashed"></i> Projeção mensal</span></div>
             <label class="toggle"><input id="air-forecast-toggle" type="checkbox" checked> Mostrar projeção</label>
@@ -230,7 +228,7 @@
     </section>
     </div>
     <footer class="footer">
-      <p>Série nacional de comércio de bens · SECEX / MDIC</p>
+      <p>Comércio de bens · SECEX / MDIC</p>
       <div>
         <a href="https://comexstat.mdic.gov.br/pt/home">Comex Stat ↗</a>
         <a href="dados/historico-mensal.csv" download>Série mensal ↓</a>

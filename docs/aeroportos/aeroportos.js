@@ -7,8 +7,8 @@ const percent = new Intl.NumberFormat("pt-BR", { style: "percent", maximumFracti
 const dateFormat = new Intl.DateTimeFormat("pt-BR", { month: "short", year: "numeric", timeZone: "UTC" });
 const names = { "0517801": "Salvador · Aeroporto Internacional", "0517700": "Salvador · Aeroporto Internacional" };
 const metrics = {
-  kg: { label: "Peso líquido", index: 3, color: "#0066cc", prefix: "", suffix: " kg" },
-  fob: { label: "Valor FOB", index: 2, color: "#7150a5", prefix: "US$ ", suffix: "" },
+  kg: { label: "Peso líquido", index: 3, color: "var(--olive)", prefix: "", suffix: " kg" },
+  fob: { label: "Valor FOB", index: 2, color: "var(--plum)", prefix: "US$ ", suffix: "" },
 };
 const aliases = { "08072000": "mamão mamões papaia papaya" };
 const cache = new Map();
@@ -151,8 +151,8 @@ async function changeOrigin(id, preferred = "") {
   byId("search").disabled = true;
   byId("product").disabled = true;
   const origin = metadata.origins.find((entry) => entry.id === id);
-  byId("origin-note").textContent = officialName(origin) + " · URF " + origin.id +
-    (origin.airport ? " · aeroporto identificado na descrição oficial." : " · a fonte não identifica um aeroporto específico.");
+  byId("origin-note").textContent = "URF " + origin.id +
+    (origin.airport ? " · aeroporto identificado" : " · unidade sem aeroporto identificado");
   try {
     const result = await loadJson("dados/origens/" + id + "/catalogo.json");
     if (sequence !== request) return;
@@ -220,9 +220,9 @@ function summarize(first, last, country) {
 
 function drawCards() {
   const cards = [
-    ["Peso líquido", compact.format(selection.kg) + " kg", integer.format(selection.kg) + " kg no recorte", "#0066cc"],
-    ["Valor FOB", "US$ " + compact.format(selection.fob), "US$ " + integer.format(selection.fob) + " no recorte", "#7150a5"],
-    ["Países de destino", integer.format(selection.destinations), "Com registros no recorte", "#246957"],
+    ["Peso líquido", compact.format(selection.kg) + " kg", integer.format(selection.kg) + " kg no recorte", "var(--olive)"],
+    ["Valor FOB", "US$ " + compact.format(selection.fob), "US$ " + integer.format(selection.fob) + " no recorte", "var(--plum)"],
+    ["Países de destino", integer.format(selection.destinations), "Com registros no recorte", "var(--olive)"],
   ];
   const year2030 = projection && forecastYears().get("2030");
   const format = metrics[metric];
@@ -341,6 +341,7 @@ function point(index) {
   chartView.guide.setAttribute("x2", x);
   chartView.marker.setAttribute("cx", x);
   chartView.marker.setAttribute("cy", chartView.y(item.value));
+  chartView.marker.setAttribute("fill", item.projected ? "var(--projection)" : metrics[metric].color);
   const format = metrics[metric];
   byId("point").replaceChildren(
     element("strong", periodLabel(item.period)),
@@ -385,6 +386,7 @@ function drawChart() {
   if (overlay) {
     const split = (x(observedCount - 1) + x(observedCount)) / 2;
     chart.append(svg("rect", { x: split, y: top, width: right - split, height: bottom - top, class: "forecast-fill" }));
+    if (right - split >= 76) chart.append(svg("text", { x: right - 4, y: 14, "text-anchor": "end", class: "annotation" }, "PROJEÇÃO"));
   }
   for (let tick = 0; tick <= maximum + step / 1000; tick += step) {
     chart.append(
@@ -403,7 +405,7 @@ function drawChart() {
   const line = { fill: "none", stroke: color, "stroke-width": 2.5, "stroke-linejoin": "round" };
   chart.append(svg("polyline", { ...line, points: coords(0, observedCount) }));
   if (overlay) chart.append(svg("polyline", {
-    ...line, points: coords(observedCount - 1, values.length), "stroke-dasharray": "6 5", "data-forecast": "true",
+    ...line, stroke: "var(--projection)", points: coords(observedCount - 1, values.length), "stroke-dasharray": "6 5", "data-forecast": "true",
   }));
   const guide = svg("line", { y1: top, y2: bottom, stroke: color, "stroke-opacity": ".6", "stroke-dasharray": "3 4" });
   const marker = svg("circle", { r: 4.8, fill: color, stroke: "#fff", "stroke-width": 1.8 });
@@ -437,9 +439,12 @@ function render() {
   byId("status").textContent = selection.detail.length ? "" : "Nenhum embarque registrado nesse recorte.";
   byId("download").disabled = !selection.detail.length;
   const origin = metadata.origins.find((entry) => entry.id === byId("origin").value);
-  byId("series-description").textContent = productName(byId("product").value) + " · " +
-    originName(origin) + (country ? " → " + metadata.countries[Number(country)] : "") +
-    " · " + metrics[metric].label + (metric === "kg" ? " (kg)" : " (US$)");
+  const code = byId("product").value;
+  byId("series-title").textContent = code ? metadata.products[code] : "Todos os produtos";
+  byId("series-kicker").textContent = code ? "Exportação aérea · NCM " + code : "Exportação aérea · Pauta completa";
+  byId("series-description").textContent = (code ? "" : "Todos os produtos · ") +
+    originName(origin) + " → " + (country ? metadata.countries[Number(country)] : "Todos os destinos") +
+    " · " + (metric === "kg" ? "Peso líquido (kg)" : "Valor (US$ FOB)");
   byId("results").hidden = false;
   drawCards();
   drawRanking();
