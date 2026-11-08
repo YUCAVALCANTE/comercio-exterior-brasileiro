@@ -7,8 +7,8 @@ const percent = new Intl.NumberFormat("pt-BR", { style: "percent", maximumFracti
 const dateFormat = new Intl.DateTimeFormat("pt-BR", { month: "short", year: "numeric", timeZone: "UTC" });
 const names = { "0517801": "Salvador · Aeroporto Internacional", "0517700": "Salvador · Aeroporto Internacional" };
 const metrics = {
-  kg: { label: "Peso líquido", index: 3, color: "var(--olive)", prefix: "", suffix: " kg" },
-  fob: { label: "Valor FOB", index: 2, color: "var(--plum)", prefix: "US$ ", suffix: "" },
+  kg: { label: "Peso líquido", index: 3, color: "var(--chart-indigo)", prefix: "", suffix: " kg" },
+  fob: { label: "Valor FOB", index: 2, color: "var(--chart-neutral)", prefix: "US$ ", suffix: "" },
 };
 const aliases = { "08072000": "mamão mamões papaia papaya" };
 const cache = new Map();
@@ -261,9 +261,9 @@ function summarize(first, last, country) {
 
 function drawCards() {
   const cards = [
-    ["Peso líquido", compact.format(selection.kg) + " kg", integer.format(selection.kg) + " kg no recorte", "var(--olive)"],
-    ["Valor FOB", "US$ " + compact.format(selection.fob), "US$ " + integer.format(selection.fob) + " no recorte", "var(--plum)"],
-    ["Países de destino", integer.format(selection.destinations), "Com registros no recorte", "var(--olive)"],
+    ["Peso líquido", compact.format(selection.kg) + " kg", integer.format(selection.kg) + " kg no recorte", "var(--chart-indigo)"],
+    ["Valor FOB", "US$ " + compact.format(selection.fob), "US$ " + integer.format(selection.fob) + " no recorte", "var(--chart-neutral)"],
+    ["Países de destino", integer.format(selection.destinations), "Com registros no recorte", "var(--chart-indigo)"],
   ];
   const year2030 = projection && forecastYears().get("2030");
   const format = metrics[metric];
@@ -396,7 +396,7 @@ function point(index) {
   chartView.guide.setAttribute("x2", x);
   chartView.marker.setAttribute("cx", x);
   chartView.marker.setAttribute("cy", chartView.y(item.value));
-  chartView.marker.setAttribute("fill", item.projected ? "var(--projection)" : metrics[metric].color);
+  chartView.marker.setAttribute("fill", item.scenario ? "var(--scenario-ink)" : item.projected ? "var(--forecast-ink)" : metrics[metric].color);
   const format = metrics[metric];
   byId("point").replaceChildren(
     element("strong", periodLabel(item.period)),
@@ -447,7 +447,7 @@ function drawChart() {
     if (boundary - split >= 76) chart.append(svg("text", { x: (boundary + split) / 2, y: 14, "text-anchor": "middle", class: "annotation" }, "PREVISÃO"));
     if (forecastEnd < points.length) {
       chart.append(svg("rect", { x: boundary, y: top, width: right - boundary, height: bottom - top, class: "scenario-fill" }));
-      if (right - boundary >= 72) chart.append(svg("text", { x: right - 4, y: 14, "text-anchor": "end", class: "annotation" }, "CENÁRIO"));
+      if (right - boundary >= 72) chart.append(svg("text", { x: right - 4, y: 14, "text-anchor": "end", class: "annotation scenario-annotation" }, "CENÁRIO"));
     }
   }
   for (let tick = 0; tick <= maximum + step / 1000; tick += step) {
@@ -467,10 +467,10 @@ function drawChart() {
   const line = { fill: "none", stroke: color, "stroke-width": 2.5, "stroke-linejoin": "round" };
   chart.append(svg("polyline", { ...line, points: coords(0, observedCount) }));
   if (overlay) chart.append(svg("polyline", {
-    ...line, stroke: "var(--projection)", points: coords(observedCount - 1, forecastEnd), "stroke-dasharray": "6 5", "data-forecast": "true",
+    ...line, stroke: "var(--forecast-ink)", points: coords(observedCount - 1, forecastEnd), "stroke-dasharray": "6 5", "data-forecast": "true",
   }));
   if (overlay && forecastEnd < points.length) chart.append(svg("polyline", {
-    ...line, stroke: "var(--projection)", points: coords(forecastEnd - 1, points.length),
+    ...line, stroke: "var(--scenario-ink)", points: coords(forecastEnd - 1, points.length),
     "stroke-dasharray": "2 5", "stroke-opacity": ".76", "data-scenario": "true",
   }));
   const guide = svg("line", { y1: top, y2: bottom, stroke: color, "stroke-opacity": ".6", "stroke-dasharray": "3 4" });

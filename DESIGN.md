@@ -1,19 +1,22 @@
-# Design do painel Comex Brasil
+# Prisma no painel Comex Brasil
 
-A interface segue a composição de um observatório econômico. Os filtros ficam numa coluna de leitura, enquanto a mercadoria, a série histórica e os valores de referência ocupam o espaço principal. No celular, os filtros vêm antes da série.
+O painel aplica a linguagem visual do **Prisma · Design System**. As cores foram amostradas da prévia pública da prancha. Os tamanhos e a tipografia sem serifa foram adaptados à densidade do painel. [Prancha Prisma no Figma](https://www.figma.com/design/R78bzVvdVHLI5JvlZMikdG/Prisma-%C2%B7-Design-System?node-id=0-1)
 
-| Token | Valor | Aplicação |
+| Token | Cor | Uso |
 |---|---|---|
-| Papel | `#f2eee5` | Fundo da página |
-| Superfície | `#fcfaf4` | Filtros, gráficos e tabelas |
-| Texto | `#2c3129` | Títulos, valores e dados |
-| Texto secundário | `#595d50` | Períodos, unidades e fonte |
-| Verde-oliva | `#435a40` | Ações, seleção e série observada em kg |
-| Ameixa | `#6f5465` | Série observada em valor FOB no recorte aéreo |
-| Terracota | `#9b4a32` | Projeção e leitura destacada de 2030 |
-| Separador | `#d7cfc0` | Divisórias, limites de painéis e cartões |
+| Fundo | `#f7f6fb` | Área de trabalho |
+| Superfície | `#ffffff` | Filtros, gráficos e indicadores |
+| Superfície sutil | `#efeef5` | Controles e cabeçalhos de tabela |
+| Texto | `#1b1a3b` | Títulos e dados |
+| Texto secundário | `#5c5975` | Períodos, unidades e fonte |
+| Contorno | `#dddaeb` | Limites e divisórias |
+| Índigo | `#433ac6` | Navegação, ações e séries observadas |
+| Índigo suave | `#eae9fb` | Controles selecionados |
+| Violeta | `#792ac0` | Previsões e destaque de 2030 |
+| Âmbar profundo | `#865c04` | Cenário além de 12 meses |
+| Verde-azulado | `#14796d` | Saldo comercial, com contraste reforçado |
 
-- Títulos em Georgia. Controles e texto em fonte de sistema. Valores tabulares e eixo em fonte monoespaçada.
-- Superfícies de papel, bordas finas e raio de 4 px. Indicadores alinhados em uma faixa, com divisórias.
-- A série observada tem linha contínua. A projeção aérea tem traço interrompido e área levemente tingida. A legenda e a leitura por teclado informam o estado de cada ponto.
-- Filtros com rótulos visíveis, foco de teclado e reorganização por largura de tela. Tabelas largas permitem rolagem horizontal.
+- Controles com raio de 8 px, painéis com raio de 16 px e navegação em pílulas. Sombras discretas separam os níveis.
+- Títulos sem serifa com peso forte. Números tabulares dão alinhamento aos indicadores, à escala e às tabelas.
+- O gráfico aéreo identifica o observado, a previsão e o cenário com texto, cor e traços diferentes.
+- Filtros em uma coluna lateral em telas largas. Em telas estreitas ficam acima do gráfico, e as tabelas admitem rolagem horizontal.

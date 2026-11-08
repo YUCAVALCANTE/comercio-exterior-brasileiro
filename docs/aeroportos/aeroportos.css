@@ -9,7 +9,7 @@
 .air-intro .source-note { max-width: 238px; text-align: right; }
 #air-explorer { display: grid; grid-template-columns: 246px minmax(0, 1fr); align-items: start; gap: 18px; }
 #air-results { min-width: 0; }
-.filter-rail { padding: 14px; border-top: 2px solid #a59a86; }
+.filter-rail { padding: 14px; }
 .filter-rail .panel-head { margin-bottom: 10px; }
 .filter-rail h2 { font-size: 17px; }
 .air-filters { display: grid; gap: 9px; }
@@ -19,19 +19,20 @@
 .air-hint { font-size: 11px; }
 .air-period { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 10px; }
 .air-metric .segments button { flex: 1; }
-.text-button { padding: 0; border: 0; background: transparent; color: var(--olive); font-size: 12px; font-weight: 650; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.text-button { padding: 0; border: 0; background: transparent; color: var(--primary-strong); font-size: 12px; font-weight: 650; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .filter-rail .text-button { display: block; margin-top: 12px; }
 #air-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-#air-kpis .kpi:last-child .kpi-number { color: var(--projection); }
+#air-kpis .kpi:last-child { background: var(--forecast); border-color: #e6d3f4; }
+#air-kpis .kpi:last-child .kpi-number { color: var(--forecast-ink); }
 .air-notes { margin-top: 0; }
 .forecast-details { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 14px; }
 .forecast-details th { white-space: nowrap; }
 .destinations { max-height: 460px; }
 .destinations thead { position: sticky; top: 0; }
 .rank-share { min-width: 120px; }
-.rank-share progress { width: 64px; height: 7px; margin-right: 6px; vertical-align: middle; accent-color: var(--olive); }
+.rank-share progress { width: 64px; height: 7px; margin-right: 6px; vertical-align: middle; accent-color: var(--chart-teal); }
 #air-status:empty { display: none; }
-#air-status:not(:empty) { color: var(--projection); }
+#air-status:not(:empty) { color: var(--scenario-ink); }
 @media (min-width: 881px) {
   .filter-rail { position: sticky; top: 12px; }
 }
@@ -40,13 +41,10 @@
   .air-intro { display: block; }
   .air-intro h1 { margin-bottom: 6px; }
   .air-intro .source-note { max-width: none; text-align: left; }
-  .air-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .air-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .air-period { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 560px) {
-  .air-filters, .air-period { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .air-origin { grid-column: 1 / -1; }
+  .air-period { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #air-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  #air-kpis .kpi:nth-child(n+3) { border-top: 1px solid var(--line); }
-  #air-kpis .kpi:nth-child(odd) { padding-left: 0; border-left: 0; }
 }

@@ -1,9 +1,9 @@
 "use strict";
 
 const labels = {
-  export: { name: "Exportações", color: "var(--olive)" },
-  import: { name: "Importações", color: "var(--plum)" },
-  balance: { name: "Saldo comercial", color: "var(--slate)" },
+  export: { name: "Exportações", color: "var(--chart-indigo)" },
+  import: { name: "Importações", color: "var(--chart-neutral)" },
+  balance: { name: "Saldo comercial", color: "var(--chart-teal)" },
 };
 const types = {
   observado: "Observado",
@@ -106,7 +106,7 @@ function selectPoint(year) {
   view.guide.setAttribute("x2", x);
   view.marker.setAttribute("cx", x);
   view.marker.setAttribute("cy", view.y(row[selected]));
-  view.marker.setAttribute("fill", row.type === "observado" ? labels[selected].color : "var(--projection)");
+  view.marker.setAttribute("fill", row.type === "observado" ? labels[selected].color : "var(--forecast-ink)");
   const value = "US$ " + billions(row[selected]) + " bi";
   const interval = row.type === "observado" || !byId("range").checked ? "" :
     " · Faixa " + rangeText(row) + " bi (" + row.range_n + " erros históricos)";
@@ -169,16 +169,16 @@ function drawChart() {
   if (bandVisible && projected.length) {
     chart.append(svg("polygon", {
       points: coords(projected, selected + "_low") + " " + coords([...projected].reverse(), selected + "_high"),
-      fill: "var(--projection)", "fill-opacity": ".13",
+      fill: "var(--forecast-ink)", "fill-opacity": ".13",
     }));
   }
   chart.append(svg("polyline", { points: coords(observed, selected), fill: "none", stroke: color, "stroke-width": 2.6 }));
   const dashed = observed.length ? [observed.at(-1), ...projected] : projected;
   chart.append(svg("polyline", {
-    points: coords(dashed, selected), fill: "none", stroke: "var(--projection)", "stroke-width": 2.6, "stroke-dasharray": "6 5",
+    points: coords(dashed, selected), fill: "none", stroke: "var(--forecast-ink)", "stroke-width": 2.6, "stroke-dasharray": "6 5",
   }));
   for (const row of projected) {
-    chart.append(svg("circle", { cx: x(row.year), cy: y(row[selected]), r: 3, fill: "var(--paper)", stroke: "var(--projection)", "stroke-width": 1.8 }));
+    chart.append(svg("circle", { cx: x(row.year), cy: y(row[selected]), r: 3, fill: "var(--paper)", stroke: "var(--forecast-ink)", "stroke-width": 1.8 }));
   }
 
   const guide = svg("line", { y1: top, y2: bottom, stroke: color, "stroke-opacity": ".55", "stroke-dasharray": "3 4" });
