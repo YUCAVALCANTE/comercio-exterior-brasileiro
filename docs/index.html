@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Estudo de TCC sobre exportações, importações e saldo comercial de bens do Brasil, com projeções até 2030.">
   <title>Comércio exterior do Brasil até 2030</title>
-  <link rel="stylesheet" href="styles.css?v=editorial">
+  <link rel="stylesheet" href="styles.css?v=capitulos">
   <link rel="stylesheet" href="aeroportos/aeroportos.css?v=editorial">
-  <script type="module" src="router.mjs?v=editorial"></script>
+  <script type="module" src="router.mjs?v=capitulos"></script>
 </head>
 <body>
   <a class="skip" href="#conteudo">Pular para o conteúdo</a>
@@ -130,6 +130,9 @@
           <label class="air-field air-origin" for="air-origin">Origem do embarque
             <select id="air-origin" aria-describedby="air-origin-note"></select>
           </label>
+          <label class="air-field" for="air-category">Categoria (capítulo SH2)
+            <select id="air-category"></select>
+          </label>
           <label class="air-field" for="air-search">Buscar mercadoria
             <input id="air-search" type="search" placeholder="Ex. mamão ou 08072000" autocomplete="off" aria-describedby="air-search-note">
           </label>
@@ -174,7 +177,7 @@
           </div>
           <section id="air-kpis" class="cards" aria-label="Totais e projeção do recorte"></section>
           <div class="chart-options">
-            <div class="legend"><span><i class="solid"></i> Observado</span><span id="air-forecast-legend"><i class="dashed"></i> Projeção mensal</span></div>
+            <div class="legend"><span><i class="solid"></i> Observado</span><span id="air-forecast-legend"><i class="dashed"></i> Previsão de 12 meses</span><span id="air-scenario-legend"><i class="dotted"></i> Cenário até 2030</span></div>
             <label class="toggle"><input id="air-forecast-toggle" type="checkbox" checked> Mostrar projeção</label>
           </div>
           <p class="point" id="air-point" aria-live="polite"></p>
@@ -188,7 +191,7 @@
               <button class="button" id="air-forecast-csv" type="button">Baixar projeção CSV ↓</button>
             </div>
             <div class="table-wrap" id="air-forecast-table">
-              <table id="air-annual"><thead><tr><th scope="col">Ano</th><th scope="col">Observado</th><th scope="col">Projetado</th><th scope="col">Total estimado</th></tr></thead><tbody></tbody></table>
+              <table id="air-annual"><thead><tr><th scope="col">Ano</th><th scope="col">Observado</th><th scope="col">Previsão</th><th scope="col">Cenário</th><th scope="col">Total estimado</th></tr></thead><tbody></tbody></table>
             </div>
           </div>
         </section>
@@ -220,9 +223,9 @@
       </div>
       <div class="notes air-notes">
         <p><strong>Embarque.</strong> O painel inclui todas as Unidades da Receita Federal (URFs) com registros de exportação na via aérea (código 04) no período. Quando a descrição oficial identifica um aeroporto, a unidade aparece no grupo de aeroportos. Outras URFs ficam em um grupo separado, pois uma unidade regional pode atender mais de um ponto físico.</p>
-        <p><strong>Produto e destino.</strong> Os produtos usam a Nomenclatura Comum do Mercosul (NCM) de oito dígitos. O país é o destino declarado da mercadoria. A base não informa o aeroporto de chegada nem as escalas.</p>
+        <p><strong>Produto e destino.</strong> A categoria é o capítulo SH2. O produto usa o código NCM de oito dígitos, cujos dois primeiros dígitos identificam o capítulo. O país é o destino declarado da mercadoria. A base não informa o aeroporto de chegada nem as escalas.</p>
         <p><strong>Medidas.</strong> O painel soma peso líquido em quilogramas e valor nominal em dólares FOB. Os totais mensais foram conferidos com uma consulta separada ao Comex Stat.</p>
-        <p><strong>Projeção do recorte.</strong> Três modelos de referência são comparados por WAPE em janelas históricas de 12 meses. São exigidos 36 meses de cobertura e pelo menos três meses com valor positivo em cada um dos dois blocos recentes de 12 meses. A estimativa usa o histórico completo do aeroporto, produto e destino selecionados. Os campos de datas filtram os registros observados. O horizonte até 2030 é uma extrapolação do padrão sazonal, sem faixa calibrada para esse prazo.</p>
+        <p><strong>Projeção do recorte.</strong> Cinco modelos são comparados por WAPE em janelas históricas de 12 meses. Entre um modelo plano e um sazonal, uma diferença de até 0,5 ponto percentual favorece o sazonal. São exigidos 36 meses de cobertura e pelo menos três meses com valor positivo em cada um dos dois blocos recentes de 12 meses. A estimativa usa o histórico completo do aeroporto, produto e destino selecionados. Os campos de datas filtram os registros observados. A partir do 13º mês, o painel mostra um cenário que prolonga o nível e, quando selecionada, a sazonalidade. O erro exibido se refere aos primeiros 12 meses das janelas históricas.</p>
         <p><a href="https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta">Microdados e dicionários do MDIC ↗</a></p>
       </div>
     </section>

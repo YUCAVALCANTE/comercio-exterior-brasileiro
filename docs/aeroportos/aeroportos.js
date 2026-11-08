@@ -1,4 +1,4 @@
-import { projectMonthly } from "./forecast.mjs";
+import { projectMonthly, validationMonths } from "./forecast.mjs?v=capitulos";
 
 const byId = (id) => document.getElementById("air-" + id);
 const integer = new Intl.NumberFormat("pt-BR");
@@ -13,6 +13,7 @@ const metrics = {
 const aliases = { "08072000": "mamão mamões papaia papaya" };
 const cache = new Map();
 let metadata;
+let chapterNames;
 let periods;
 let catalog = [];
 let rows = null;
@@ -104,9 +105,23 @@ function fillOrigins() {
   byId("origin").replaceChildren(...groups);
 }
 
+function categoryName(code) {
+  return code + " · " + (chapterNames[code] || "Capítulo sem descrição na tabela oficial");
+}
+
+function fillCategories(preferred) {
+  const chapters = [...new Set(catalog.map((code) => code.slice(0, 2)))].sort();
+  const dropdown = byId("category");
+  dropdown.replaceChildren(option("", "Todas as categorias"),
+    ...chapters.map((chapter) => option(chapter, categoryName(chapter))));
+  dropdown.value = chapters.includes(preferred) ? preferred : "";
+}
+
 function matchingProducts() {
+  const category = byId("category").value;
   const terms = normalize(byId("search").value).split(/\s+/).filter(Boolean);
   return catalog.filter((code) => {
+    if (category && !code.startsWith(category)) return false;
     const searchable = normalize(code + " " + metadata.products[code] + " " + (aliases[code] || ""));
     return terms.every((term) => searchable.includes(term));
   });
@@ -115,12 +130,14 @@ function matchingProducts() {
 function fillProducts(code) {
   const matches = matchingProducts();
   const visible = matches.slice(0, 120);
-  if (code && catalog.includes(code) && !visible.includes(code)) visible.unshift(code);
+  const category = byId("category").value;
+  const valid = catalog.includes(code) && (!category || code.startsWith(category));
+  if (valid && !visible.includes(code)) visible.unshift(code);
   byId("product").replaceChildren(
-    option("", "Todos os produtos"),
+    option("", category ? "Todos os produtos da categoria" : "Todos os produtos"),
     ...visible.map((product) => option(product, productName(product))),
   );
-  byId("product").value = catalog.includes(code) ? code : "";
+  byId("product").value = valid ? code : "";
   const count = matches.length;
   byId("search-note").textContent = count === 0
     ? "Nenhum produto corresponde à busca neste ponto de embarque."
@@ -143,13 +160,14 @@ function reportLoadError(error, sequence) {
   showError("Não foi possível carregar o recorte. Escolha outro filtro ou recarregue a página.");
 }
 
-async function changeOrigin(id, preferred = "") {
+async function changeOrigin(id, preferred = "", preferredCategory = "") {
   const sequence = ++request;
   setLoading("Carregando produtos da origem…");
   byId("origin").value = id;
   byId("search").value = "";
   byId("search").disabled = true;
   byId("product").disabled = true;
+  byId("category").disabled = true;
   const origin = metadata.origins.find((entry) => entry.id === id);
   byId("origin-note").textContent = "URF " + origin.id +
     (origin.airport ? " · aeroporto identificado" : " · unidade sem aeroporto identificado");
@@ -157,7 +175,9 @@ async function changeOrigin(id, preferred = "") {
     const result = await loadJson("dados/origens/" + id + "/catalogo.json");
     if (sequence !== request) return;
     catalog = result;
+    fillCategories(catalog.includes(preferred) ? preferred.slice(0, 2) : preferredCategory);
     fillProducts(preferred);
+    byId("category").disabled = false;
     byId("search").disabled = false;
     byId("product").disabled = false;
     await changeProduct();
@@ -166,17 +186,36 @@ async function changeOrigin(id, preferred = "") {
   }
 }
 
+function aggregateChapter(products) {
+  const totals = new Map();
+  for (const entries of Object.values(products)) {
+    for (const [month, country, fob, kg] of entries) {
+      const key = month + ":" + country;
+      const row = totals.get(key) || [month, country, 0, 0];
+      row[2] += fob;
+      row[3] += kg;
+      totals.set(key, row);
+    }
+  }
+  return [...totals.values()].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+}
+
 async function changeProduct() {
   const sequence = ++request;
   const origin = byId("origin").value;
   const code = byId("product").value;
+  if (code && !byId("category").value) {
+    byId("category").value = code.slice(0, 2);
+    fillProducts(code);
+  }
+  const category = byId("category").value;
   const previousCountry = byId("destination").value;
   setLoading("Carregando a série mensal e os destinos…");
   try {
-    const url = "dados/origens/" + origin + "/" + (code ? code.slice(0, 2) : "todos") + ".json";
+    const url = "dados/origens/" + origin + "/" + (category || "todos") + ".json";
     const result = await loadJson(url);
     if (sequence !== request) return;
-    rows = code ? result[code] : result;
+    rows = code ? result[code] : category ? aggregateChapter(result) : result;
     const countries = [...new Set(rows.map((row) => row[1]))];
     countries.sort((a, b) => metadata.countries[a].localeCompare(metadata.countries[b], "pt-BR"));
     const dropdown = byId("destination");
@@ -185,6 +224,8 @@ async function changeProduct() {
     dropdown.disabled = false;
     const urlState = new URL(location.href);
     urlState.searchParams.set("origem", origin);
+    if (category) urlState.searchParams.set("capitulo", category);
+    else urlState.searchParams.delete("capitulo");
     if (code) urlState.searchParams.set("produto", code);
     else urlState.searchParams.delete("produto");
     if (!document.getElementById("view-air").hidden) history.replaceState(null, "", urlState);
@@ -226,8 +267,9 @@ function drawCards() {
   ];
   const year2030 = projection && forecastYears().get("2030");
   const format = metrics[metric];
+  const forecastLabel = year2030?.scenarioMonths ? "Cenário para 2030" : "Estimativa para 2030";
   cards.push(year2030
-    ? ["Estimativa para 2030", format.prefix + compact.format(year2030.observed + year2030.projected) + format.suffix,
+    ? [forecastLabel, format.prefix + compact.format(year2030.observed + year2030.projected) + format.suffix,
       "WAPE de " + percent.format(projection.wape) + " na validação de 12 meses", format.color]
     : ["Estimativa para 2030", "Indisponível", "Histórico insuficiente para o recorte", format.color]);
   byId("kpis").replaceChildren(...cards.map(([title, value, note, color]) => {
@@ -245,7 +287,7 @@ function drawRanking() {
   const body = document.querySelector("#air-rank tbody");
   const selectedCountry = byId("destination").value;
   byId("rank-note").textContent = "Ordenado por " + metrics[metric].label.toLowerCase() +
-    ". O ranking mantém todos os destinos do produto e do período.";
+    ". O ranking mantém todos os destinos da mercadoria ou categoria no período.";
   if (countries.length === 0) {
     const row = element("tr");
     const cell = element("td", "Nenhum país com registros nesse período.");
@@ -278,8 +320,16 @@ function forecastYears() {
   const years = new Map();
   for (const [index, period] of futurePeriods.entries()) {
     const year = period.slice(0, 4);
-    const totals = years.get(year) || { observed: 0, months: 0, projected: 0 };
-    totals.projected += projection.values[index];
+    const totals = years.get(year) || { observed: 0, months: 0, forecast: 0, forecastMonths: 0, scenario: 0, scenarioMonths: 0, projected: 0 };
+    const value = projection.values[index];
+    if (index < validationMonths) {
+      totals.forecast += value;
+      totals.forecastMonths++;
+    } else {
+      totals.scenario += value;
+      totals.scenarioMonths++;
+    }
+    totals.projected += value;
     years.set(year, totals);
   }
   periods.forEach((period, index) => {
@@ -300,16 +350,20 @@ function drawForecast() {
     return;
   }
   const unit = metric === "kg" ? "kg" : "US$ FOB";
+  const tie = projection.seasonalTie
+    ? " Média de menor erro: " + percent.format(projection.bestWape) + ". A diferença para o sazonal ficou dentro de 0,5 ponto percentual." : "";
   note.textContent = projection.model + " · WAPE de " + percent.format(projection.wape) +
-    " em " + projection.folds + " janelas históricas de 12 meses · " + unit +
-    ". A extensão até 2030 mantém o nível ou a sazonalidade do modelo escolhido.";
+    " em " + projection.folds + " janelas históricas de 12 meses. Média de 12 meses: " +
+    percent.format(projection.baselineWape) + ". Após os primeiros 12 meses, os valores em " + unit +
+    " representam um cenário de continuidade." + tie;
   const body = document.querySelector("#air-annual tbody");
   body.replaceChildren(...Array.from(forecastYears(), ([year, totals]) => {
     const row = element("tr", undefined, year === "2030" ? "projected" : "");
     const label = element("th", year);
     label.scope = "row";
     row.append(label, element("td", totals.months ? integer.format(totals.observed) : "—", "num"),
-      element("td", integer.format(totals.projected), "num"),
+      element("td", totals.forecastMonths ? integer.format(totals.forecast) : "—", "num"),
+      element("td", totals.scenarioMonths ? integer.format(totals.scenario) : "—", "num"),
       element("td", integer.format(totals.observed + totals.projected), "num"));
     return row;
   }));
@@ -321,14 +375,15 @@ function downloadForecast() {
   const product = byId("product").value;
   const country = byId("destination").value;
   const destination = country === "" ? "Todos os países" : metadata.countries[Number(country)];
-  const headers = ["mes", "situacao", "urf_embarque", "ncm", "pais_destino", "metrica", "valor", "modelo"];
+  const category = byId("category").value;
+  const headers = ["mes", "situacao", "urf_embarque", "capitulo_sh2", "ncm", "pais_destino", "metrica", "valor", "modelo"];
   const series = [
     ...periods.map((period, index) => [period, "observado", projection.historical[index][metric]]),
-    ...futurePeriods.map((period, index) => [period, "projetado", projection.values[index]]),
+    ...futurePeriods.map((period, index) => [period, index < validationMonths ? "previsao" : "cenario", projection.values[index]]),
   ];
   const data = series.map(([period, state, value]) =>
-    [period, state, urf, product, destination, metric, value, state === "projetado" ? projection.model : ""]);
-  downloadCsv(headers, data, "projecao-aerea-" + urf + "-" + (product || "todos") + ".csv");
+    [period, state, urf, category, product, destination, metric, value, state !== "observado" ? projection.model : ""]);
+  downloadCsv(headers, data, "projecao-aerea-" + urf + "-" + (product || category || "todos") + ".csv");
 }
 
 function point(index) {
@@ -346,7 +401,7 @@ function point(index) {
   byId("point").replaceChildren(
     element("strong", periodLabel(item.period)),
     document.createTextNode(format.prefix + integer.format(item.value) + format.suffix +
-      " · " + (item.projected ? "Projeção" : "Observado")),
+      " · " + (item.scenario ? "Cenário" : item.projected ? "Previsão" : "Observado")),
   );
 }
 
@@ -360,6 +415,7 @@ function drawChart() {
   const overlay = canOverlay && byId("forecast-toggle").checked;
   byId("forecast-toggle").disabled = !canOverlay;
   byId("forecast-legend").hidden = !overlay;
+  byId("scenario-legend").hidden = !overlay || futurePeriods.length <= validationMonths;
   byId("chart-help").textContent = projection && !canOverlay
     ? "Inclua o último mês observado no filtro para sobrepor a projeção. A tabela anual usa o histórico completo."
     : "Use o cursor ou as setas do teclado para ler os meses. Zero indica ausência de valor registrado.";
@@ -368,8 +424,9 @@ function drawChart() {
   }));
   const observedCount = points.length;
   if (overlay) futurePeriods.forEach((period, index) => points.push({
-    period, value: projection.values[index], projected: true,
+    period, value: projection.values[index], projected: true, scenario: index >= validationMonths,
   }));
+  const forecastEnd = Math.min(points.length, observedCount + validationMonths);
   const values = points.map((item) => item.value);
   const rough = Math.max(1, ...values) / 4;
   const magnitude = Math.pow(10, Math.floor(Math.log10(rough)));
@@ -385,8 +442,13 @@ function drawChart() {
   chart.setAttribute("aria-label", metrics[metric].label + " mensal de " + points[0].period + " a " + points.at(-1).period);
   if (overlay) {
     const split = (x(observedCount - 1) + x(observedCount)) / 2;
-    chart.append(svg("rect", { x: split, y: top, width: right - split, height: bottom - top, class: "forecast-fill" }));
-    if (right - split >= 76) chart.append(svg("text", { x: right - 4, y: 14, "text-anchor": "end", class: "annotation" }, "PROJEÇÃO"));
+    const boundary = forecastEnd < points.length ? (x(forecastEnd - 1) + x(forecastEnd)) / 2 : right;
+    chart.append(svg("rect", { x: split, y: top, width: boundary - split, height: bottom - top, class: "forecast-fill" }));
+    if (boundary - split >= 76) chart.append(svg("text", { x: (boundary + split) / 2, y: 14, "text-anchor": "middle", class: "annotation" }, "PREVISÃO"));
+    if (forecastEnd < points.length) {
+      chart.append(svg("rect", { x: boundary, y: top, width: right - boundary, height: bottom - top, class: "scenario-fill" }));
+      if (right - boundary >= 72) chart.append(svg("text", { x: right - 4, y: 14, "text-anchor": "end", class: "annotation" }, "CENÁRIO"));
+    }
   }
   for (let tick = 0; tick <= maximum + step / 1000; tick += step) {
     chart.append(
@@ -405,7 +467,11 @@ function drawChart() {
   const line = { fill: "none", stroke: color, "stroke-width": 2.5, "stroke-linejoin": "round" };
   chart.append(svg("polyline", { ...line, points: coords(0, observedCount) }));
   if (overlay) chart.append(svg("polyline", {
-    ...line, stroke: "var(--projection)", points: coords(observedCount - 1, values.length), "stroke-dasharray": "6 5", "data-forecast": "true",
+    ...line, stroke: "var(--projection)", points: coords(observedCount - 1, forecastEnd), "stroke-dasharray": "6 5", "data-forecast": "true",
+  }));
+  if (overlay && forecastEnd < points.length) chart.append(svg("polyline", {
+    ...line, stroke: "var(--projection)", points: coords(forecastEnd - 1, points.length),
+    "stroke-dasharray": "2 5", "stroke-opacity": ".76", "data-scenario": "true",
   }));
   const guide = svg("line", { y1: top, y2: bottom, stroke: color, "stroke-opacity": ".6", "stroke-dasharray": "3 4" });
   const marker = svg("circle", { r: 4.8, fill: color, stroke: "#fff", "stroke-width": 1.8 });
@@ -440,8 +506,10 @@ function render() {
   byId("download").disabled = !selection.detail.length;
   const origin = metadata.origins.find((entry) => entry.id === byId("origin").value);
   const code = byId("product").value;
-  byId("series-title").textContent = code ? metadata.products[code] : "Todos os produtos";
-  byId("series-kicker").textContent = code ? "Exportação aérea · NCM " + code : "Exportação aérea · Pauta completa";
+  const category = byId("category").value;
+  byId("series-title").textContent = code ? metadata.products[code] : category ? chapterNames[category] || categoryName(category) : "Todos os produtos";
+  byId("series-kicker").textContent = code ? "Exportação aérea · NCM " + code
+    : category ? "Exportação aérea · Capítulo SH2 " + category : "Exportação aérea · Pauta completa";
   byId("series-description").textContent = (code ? "" : "Todos os produtos · ") +
     originName(origin) + " → " + (country ? metadata.countries[Number(country)] : "Todos os destinos") +
     " · " + (metric === "kg" ? "Peso líquido (kg)" : "Valor (US$ FOB)");
@@ -457,12 +525,12 @@ function csvCell(value) {
 }
 
 function download() {
-  const headers = ["mes", "urf_embarque", "ncm", "produto", "pais_destino", "vl_fob_usd", "kg_liquido"];
+  const headers = ["mes", "urf_embarque", "capitulo_sh2", "ncm", "produto", "pais_destino", "vl_fob_usd", "kg_liquido"];
   const urf = byId("origin").value;
   const product = byId("product").value;
   const records = selection.detail.map(([month, country, fob, kg]) =>
-    [periods[month], urf, product, productName(product), metadata.countries[country], fob, kg]);
-  downloadCsv(headers, records, "comex-aereo-" + urf + "-" + (product || "todos") + ".csv");
+    [periods[month], urf, byId("category").value, product, productName(product), metadata.countries[country], fob, kg]);
+  downloadCsv(headers, records, "comex-aereo-" + urf + "-" + (product || byId("category").value || "todos") + ".csv");
 }
 
 function downloadCsv(headers, records, filename) {
@@ -476,7 +544,7 @@ function downloadCsv(headers, records, filename) {
 }
 
 async function init() {
-  metadata = await loadJson("dados/index.json");
+  [metadata, chapterNames] = await Promise.all([loadJson("dados/index.json"), loadJson("dados/capitulos.json")]);
   periods = monthList(metadata.start, metadata.end);
   futurePeriods = monthList(metadata.end, "2030-12").slice(1);
   const airports = metadata.origins.filter((origin) => origin.airport).length;
@@ -500,7 +568,13 @@ async function init() {
       changeOrigin(example.origin, example.product);
     });
   }
-  byId("origin").addEventListener("change", () => changeOrigin(byId("origin").value, byId("product").value));
+  byId("origin").addEventListener("change", () =>
+    changeOrigin(byId("origin").value, byId("product").value, byId("category").value));
+  byId("category").addEventListener("change", () => {
+    byId("search").value = "";
+    fillProducts("");
+    changeProduct();
+  });
   byId("product").addEventListener("change", changeProduct);
   byId("search").addEventListener("input", () => fillProducts(byId("product").value));
   byId("search").addEventListener("keydown", (event) => {
@@ -539,7 +613,7 @@ async function init() {
   const requested = metadata.origins.some((origin) => origin.id === initialOrigin);
   const largest = [...metadata.origins].sort((a, b) => b.fob - a.fob)[0];
   await changeOrigin(requested ? initialOrigin : (example?.origin || largest.id),
-    requested ? (url.get("produto") || "") : (example?.product || ""));
+    requested ? (url.get("produto") || "") : (example?.product || ""), url.get("capitulo") || "");
 }
 
 init().catch((error) => {

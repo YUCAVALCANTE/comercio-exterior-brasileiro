@@ -102,6 +102,15 @@ def json_write(path: Path, content):
     temporary.replace(path)
 
 
+def write_chapter_catalog():
+    with requests.Session() as session:
+        rows = query(session, "GET", API + "/filters/chapter")[0]
+    names = {str(row["id"]).zfill(2): row["noSh2pt"] for row in rows}
+    if len(names) != len(rows) or not names.get("08"):
+        raise ValueError("A tabela oficial de capítulos SH2 está incompleta.")
+    json_write(PUBLIC / "capitulos.json", names)
+
+
 def airport_name(name):
     plain = "".join(c for c in unicodedata.normalize("NFD", name) if not unicodedata.combining(c))
     return bool(re.search(r"\bAEROP(?:ORTO|\.)", plain.upper()))
@@ -176,6 +185,7 @@ def main():
     routes, totals = read_routes(start, end)
     print(f"{len(routes):,} combinações agregadas; verificando os totais oficiais.", flush=True)
     updated = verify_official(totals, start, end)
+    write_chapter_catalog()
     package(routes, totals, start, end, updated)
 
 

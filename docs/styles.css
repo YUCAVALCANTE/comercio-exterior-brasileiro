@@ -15,6 +15,7 @@
   --grid: #e4ddd0;
   --soft: #e9e5d8;
   --forecast: #f3e6d9;
+  --scenario: #f5eee5;
   --radius: 4px;
 }
 * { box-sizing: border-box; }
@@ -76,11 +77,13 @@ svg { display: block; width: 100%; height: auto; overflow: visible; }
 .axis { fill: var(--muted); font: 11px var(--numeral); }
 .annotation { fill: var(--projection); font-size: 10px; font-weight: 650; letter-spacing: .04em; }
 .forecast-fill { fill: var(--forecast); }
+.scenario-fill { fill: var(--scenario); }
 .chart-hit { cursor: crosshair; }
 .legend { display: flex; flex-wrap: wrap; gap: 5px 14px; margin: 4px 0; color: var(--muted); font-size: 12px; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 18px; height: 0; border-bottom: 2px solid var(--series, var(--olive)); }
 .legend .dashed { border-bottom-style: dashed; border-color: var(--projection); }
+.legend .dotted { border-bottom-style: dotted; border-color: var(--projection); }
 .legend .band { height: 9px; border: none; background: color-mix(in srgb, var(--projection) 20%, var(--paper)); }
 .caption { color: var(--muted); font-size: 12px; line-height: 1.4; margin: 6px 0 0; }
 .table-wrap { overflow-x: auto; }

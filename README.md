@@ -8,7 +8,7 @@ O projeto compara modelos de previsão para o comércio de bens do Brasil. O pai
 
 **[Abrir aeroportos, produtos e destinos](https://yucavalcante.github.io/comercio-exterior-brasileiro/?visao=aeroportos)** · [Ver mamão em Salvador](https://yucavalcante.github.io/comercio-exterior-brasileiro/?visao=aeroportos&origem=0517801&produto=08072000)
 
-O painel permite escolher a unidade de embarque, procurar um produto por nome ou NCM, filtrar período e país, acompanhar a curva mensal de peso ou valor FOB e baixar o recorte. São **46 meses**, de janeiro de 2023 a outubro de 2026, **7.533 códigos NCM** e **21 URFs** com exportações na via aérea. Onze códigos têm aeroporto identificado na descrição oficial.
+O painel permite escolher a unidade de embarque, a categoria (capítulo SH2), um produto NCM ou todos os produtos da categoria, filtrar período e país, acompanhar a curva mensal de peso ou valor FOB e baixar o recorte. São **46 meses**, de janeiro de 2023 a outubro de 2026, **7.533 códigos NCM** e **21 URFs** com exportações na via aérea. Onze códigos têm aeroporto identificado na descrição oficial.
 
 O extrato usa os CSVs nacionais de exportação do Comex Stat com a via `04`. Cada observação do painel agrega mês, URF de embarque, NCM e país de destino. Os totais de peso e FOB dos 46 meses foram reconciliados com a API oficial. As unidades regionais são exibidas separadamente, pois podem agrupar pontos físicos. O país se refere ao destino declarado da mercadoria. A base não informa o aeroporto de chegada nem as escalas. [Dicionários e microdados do MDIC](https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta)
 
@@ -21,11 +21,11 @@ Para reproduzir o extrato localmente, instale os requisitos do projeto e execute
 & .\.venv\Scripts\python.exe -B air_build.py --start 2023-01 --end 2026-10
 ```
 
-Os CSVs brutos ficam em `data/air-source/`. O site carrega os dados agregados por URF e capítulo NCM conforme o recorte selecionado.
+Os CSVs brutos ficam em `data/air-source/`. O site carrega os dados agregados por URF e capítulo conforme o recorte selecionado. Os nomes dos capítulos vêm da tabela oficial da API Comex Stat.
 
-A visão de aeroportos faz parte da mesma página da projeção nacional. A curva mensal e a tabela anual projetam o aeroporto, o NCM e o destino selecionados, em kg ou US$ FOB. Comparam-se o ingênuo sazonal, a média sazonal de dois anos e a média dos últimos 12 meses por WAPE mensal em janelas de 12 meses. Exigem-se 36 meses de cobertura e três meses positivos em cada um dos dois blocos recentes de 12 meses. O modelo selecionado estende o padrão estimado até dezembro de 2030. O erro histórico mede as janelas de 12 meses e a série por recorte não tem faixa calibrada para o prazo de 2030.
+A visão de aeroportos faz parte da mesma página da projeção nacional. A curva mensal e a tabela anual usam o aeroporto, a categoria ou NCM e o destino selecionados, em kg ou US$ FOB. O painel compara o ingênuo sazonal, a média sazonal de dois anos, as médias planas de três e 12 meses e um nível trimestral com sazonalidade suavizada. Este último normaliza dois ciclos anuais por suas médias, reduz os desvios sazonais à metade e estima o nível a partir dos três meses recentes dessazonalizados. A seleção usa WAPE mensal em janelas móveis de 12 meses e favorece um modelo sazonal quando ele fica a até 0,5 ponto percentual do melhor modelo plano. Exigem-se 36 meses de cobertura e três meses positivos em cada um dos dois blocos recentes de 12 meses. O prazo testado é de 12 meses. A partir do 13º mês, os valores são um cenário de continuidade até 2030.
 
-No recorte de mamão fresco em Salvador, a média dos últimos 12 meses foi selecionada para peso líquido. A estimativa anual em 2030 é **2,76 milhões de kg**, com WAPE de **40,5%** nas 11 janelas históricas de 12 meses.
+No recorte de mamão fresco em Salvador, o nível trimestral com sazonalidade suavizada tem WAPE de **40,0%** em peso, ante **40,5%** da média de 12 meses e **40,0%** da média de três meses, com arredondamento. O cenário de 2030 é de **2,97 milhões de kg**. A comparação vem de 11 janelas históricas sobrepostas de 12 meses.
 
 A paleta, a tipografia e os componentes compartilhados estão documentados em [DESIGN.md](DESIGN.md).
 
