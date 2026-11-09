@@ -3,25 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <meta name="description" content="Estudo de TCC sobre exportações, importações e saldo comercial de bens do Brasil, com projeções até 2030.">
   <title>Comércio exterior do Brasil até 2030</title>
-  <link rel="stylesheet" href="styles.css?v=prisma">
-  <link rel="stylesheet" href="aeroportos/aeroportos.css?v=prisma">
-  <script type="module" src="router.mjs?v=prisma"></script>
+  <link rel="stylesheet" href="styles.css?v=apple-hig">
+  <link rel="stylesheet" href="aeroportos/aeroportos.css?v=apple-hig">
+  <script type="module" src="router.mjs?v=apple-hig"></script>
 </head>
 <body>
   <a class="skip" href="#conteudo">Pular para o conteúdo</a>
   <header class="bar">
     <div class="shell bar-content">
-      <a class="brand" href="./"><span class="prisma-mark" aria-hidden="true"><i></i><i></i><i></i></span>Comex Brasil</a>
+      <a class="brand" href="./">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" focusable="false">
+            <path d="M5 18v-5m7 5V9m7 9V5"/>
+          </svg>
+        </span>
+        Comex Brasil
+      </a>
       <nav aria-label="Navegação">
         <a href="?visao=nacional" data-view="nacional" aria-current="page">Visão nacional</a>
         <a href="?visao=aeroportos" data-view="aeroportos">Aeroportos</a>
-        <a href="https://github.com/YUCAVALCANTE/comercio-exterior-brasileiro">GitHub ↗</a>
       </nav>
+      <a class="source-link" href="https://github.com/YUCAVALCANTE/comercio-exterior-brasileiro">GitHub ↗</a>
     </div>
   </header>
-  <main class="shell" id="conteudo">
+  <main class="shell" id="conteudo" tabindex="-1">
     <div id="view-national">
     <section class="intro" aria-labelledby="titulo">
       <p class="eyebrow">Observatório de comércio exterior</p>
@@ -55,7 +63,7 @@
             <button type="button" data-series="import" aria-pressed="false">Importações</button>
             <button type="button" data-series="balance" aria-pressed="false">Saldo</button>
           </div>
-          <label class="toggle"><input type="checkbox" id="range" checked> Mostrar faixa empírica</label>
+          <label class="toggle"><input type="checkbox" role="switch" id="range" checked> Mostrar faixa empírica</label>
         </div>
         <div class="point" id="point" aria-live="polite"></div>
         <div class="chart-wrap" id="chart-wrap">
@@ -178,7 +186,7 @@
           <section id="air-kpis" class="cards" aria-label="Totais e projeção do recorte"></section>
           <div class="chart-options">
             <div class="legend"><span><i class="solid"></i> Observado</span><span id="air-forecast-legend"><i class="dashed"></i> Previsão de 12 meses</span><span id="air-scenario-legend"><i class="dotted"></i> Cenário até 2030</span></div>
-            <label class="toggle"><input id="air-forecast-toggle" type="checkbox" checked> Mostrar projeção</label>
+            <label class="toggle"><input id="air-forecast-toggle" type="checkbox" role="switch" checked> Mostrar projeção</label>
           </div>
           <p class="point" id="air-point" aria-live="polite"></p>
           <div class="chart-wrap" id="air-chart-wrap">

@@ -1,7 +1,7 @@
 "use strict";
 
 const labels = {
-  export: { name: "Exportações", color: "var(--chart-indigo)" },
+  export: { name: "Exportações", color: "var(--chart-blue)" },
   import: { name: "Importações", color: "var(--chart-neutral)" },
   balance: { name: "Saldo comercial", color: "var(--chart-teal)" },
 };
@@ -44,7 +44,6 @@ function drawCards() {
   const latest = data.annual.at(-1);
   const cards = Object.entries(labels).map(([key, label]) => {
     const card = html("article", "", "kpi");
-    card.style.setProperty("--series", label.color);
     const range = billions(latest[key + "_low"]) + " a " + billions(latest[key + "_high"]) + " bi";
     card.append(
       html("p", label.name + " em " + latest.year, "kpi-label"),
@@ -182,7 +181,7 @@ function drawChart() {
   }
 
   const guide = svg("line", { y1: top, y2: bottom, stroke: color, "stroke-opacity": ".55", "stroke-dasharray": "3 4" });
-  const marker = svg("circle", { r: 4.5, fill: color, stroke: "#fff", "stroke-width": 1.8 });
+  const marker = svg("circle", { r: 4.5, fill: color, stroke: "var(--paper)", "stroke-width": 1.8 });
   chart.append(guide, marker);
   const halfStep = (right - left) / (lastYear - firstYear) / 2;
   for (const row of rows) {

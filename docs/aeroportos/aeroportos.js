@@ -7,7 +7,7 @@ const percent = new Intl.NumberFormat("pt-BR", { style: "percent", maximumFracti
 const dateFormat = new Intl.DateTimeFormat("pt-BR", { month: "short", year: "numeric", timeZone: "UTC" });
 const names = { "0517801": "Salvador · Aeroporto Internacional", "0517700": "Salvador · Aeroporto Internacional" };
 const metrics = {
-  kg: { label: "Peso líquido", index: 3, color: "var(--chart-indigo)", prefix: "", suffix: " kg" },
+  kg: { label: "Peso líquido", index: 3, color: "var(--chart-blue)", prefix: "", suffix: " kg" },
   fob: { label: "Valor FOB", index: 2, color: "var(--chart-neutral)", prefix: "US$ ", suffix: "" },
 };
 const aliases = { "08072000": "mamão mamões papaia papaya" };
@@ -261,20 +261,19 @@ function summarize(first, last, country) {
 
 function drawCards() {
   const cards = [
-    ["Peso líquido", compact.format(selection.kg) + " kg", integer.format(selection.kg) + " kg no recorte", "var(--chart-indigo)"],
-    ["Valor FOB", "US$ " + compact.format(selection.fob), "US$ " + integer.format(selection.fob) + " no recorte", "var(--chart-neutral)"],
-    ["Países de destino", integer.format(selection.destinations), "Com registros no recorte", "var(--chart-indigo)"],
+    ["Peso líquido", compact.format(selection.kg) + " kg", integer.format(selection.kg) + " kg no recorte"],
+    ["Valor FOB", "US$ " + compact.format(selection.fob), "US$ " + integer.format(selection.fob) + " no recorte"],
+    ["Países de destino", integer.format(selection.destinations), "Com registros no recorte"],
   ];
   const year2030 = projection && forecastYears().get("2030");
   const format = metrics[metric];
   const forecastLabel = year2030?.scenarioMonths ? "Cenário para 2030" : "Estimativa para 2030";
   cards.push(year2030
     ? [forecastLabel, format.prefix + compact.format(year2030.observed + year2030.projected) + format.suffix,
-      "WAPE de " + percent.format(projection.wape) + " na validação de 12 meses", format.color]
-    : ["Estimativa para 2030", "Indisponível", "Histórico insuficiente para o recorte", format.color]);
-  byId("kpis").replaceChildren(...cards.map(([title, value, note, color]) => {
+      "WAPE de " + percent.format(projection.wape) + " na validação de 12 meses"]
+    : ["Estimativa para 2030", "Indisponível", "Histórico insuficiente para o recorte"]);
+  byId("kpis").replaceChildren(...cards.map(([title, value, note]) => {
     const card = element("article", undefined, "kpi");
-    card.style.setProperty("--series", color);
     card.append(element("p", title, "kpi-label"), element("p", value, "kpi-number"), element("p", note, "kpi-range"));
     return card;
   }));
@@ -471,10 +470,10 @@ function drawChart() {
   }));
   if (overlay && forecastEnd < points.length) chart.append(svg("polyline", {
     ...line, stroke: "var(--scenario-ink)", points: coords(forecastEnd - 1, points.length),
-    "stroke-dasharray": "2 5", "stroke-opacity": ".76", "data-scenario": "true",
+    "stroke-dasharray": "2 5", "data-scenario": "true",
   }));
   const guide = svg("line", { y1: top, y2: bottom, stroke: color, "stroke-opacity": ".6", "stroke-dasharray": "3 4" });
-  const marker = svg("circle", { r: 4.8, fill: color, stroke: "#fff", "stroke-width": 1.8 });
+  const marker = svg("circle", { r: 4.8, fill: color, stroke: "var(--paper)", "stroke-width": 1.8 });
   chart.append(guide, marker);
   const half = (right - left) / (2 * Math.max(1, values.length - 1));
   for (let index = 0; index < values.length; index++) {

@@ -1,22 +1,9 @@
-# Prisma no painel Comex Brasil
+# Design do painel Comex Brasil
 
-O painel aplica a linguagem visual do **Prisma · Design System**. As cores foram amostradas da prévia pública da prancha. Os tamanhos e a tipografia sem serifa foram adaptados à densidade do painel. [Prancha Prisma no Figma](https://www.figma.com/design/R78bzVvdVHLI5JvlZMikdG/Prisma-%C2%B7-Design-System?node-id=0-1)
+As duas visões adaptam as diretrizes Apple HIG à interface web. [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/)
 
-| Token | Cor | Uso |
-|---|---|---|
-| Fundo | `#f7f6fb` | Área de trabalho |
-| Superfície | `#ffffff` | Filtros, gráficos e indicadores |
-| Superfície sutil | `#efeef5` | Controles e cabeçalhos de tabela |
-| Texto | `#1b1a3b` | Títulos e dados |
-| Texto secundário | `#5c5975` | Períodos, unidades e fonte |
-| Contorno | `#dddaeb` | Limites e divisórias |
-| Índigo | `#433ac6` | Navegação, ações e séries observadas |
-| Índigo suave | `#eae9fb` | Controles selecionados |
-| Violeta | `#792ac0` | Previsões e destaque de 2030 |
-| Âmbar profundo | `#865c04` | Cenário além de 12 meses |
-| Verde-azulado | `#14796d` | Saldo comercial, com contraste reforçado |
-
-- Controles com raio de 8 px, painéis com raio de 16 px e navegação em pílulas. Sombras discretas separam os níveis.
-- Títulos sem serifa com peso forte. Números tabulares dão alinhamento aos indicadores, à escala e às tabelas.
-- O gráfico aéreo identifica o observado, a previsão e o cenário com texto, cor e traços diferentes.
-- Filtros em uma coluna lateral em telas largas. Em telas estreitas ficam acima do gráfico, e as tabelas admitem rolagem horizontal.
+- A tipografia usa San Francisco quando disponível e recorre à fonte do sistema nas demais plataformas. Indicadores e tabelas usam números tabulares.
+- A navegação segmentada distingue as duas visões. Controles principais têm altura mínima de 44 px e foco de teclado visível.
+- O tema acompanha a preferência de cor do sistema. Fundos sólidos, divisórias e cartões agrupados separam os controles dos resultados.
+- As séries observada, prevista e de cenário usam cores e traços distintos, acompanhados de rótulos e tabelas.
+- Os filtros de aeroportos ficam ao lado do gráfico em telas largas e acima dele em telas estreitas. As tabelas podem rolar horizontalmente.
